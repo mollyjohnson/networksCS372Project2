@@ -17,4 +17,19 @@ Last modified:
 #include <cmath>
 
 //specify things used from std instead of using standard namespace
+using std::cout;
+using std::cin;
+using std::endl;
+using std::string;
+using std::ifstream;
+using std::ofstream;
+using std::vector;
+using std::getline;
+using std::stringstream;
+using std::istringstream;
 
+int main(){
+	
+
+	return 0;
+}

@@ -6,24 +6,25 @@
 #Last Modified: 
 
 #makefile adapted from  my own work during OSU CS 344 Winter 2019, last updated 3/3/19.
-#make all be the default target, with the dependency of ChatApp
+#make all be the default target, with the dependency of FTP 
 all: FTP 
 
-#chatApp target with the dependency of chatclient.c and command to compile chatclient.c into
-#the chatclient executable using gcc. Also includes the chmod +x command to add executable permissions
-#to the chatserve file (which is a python file) so that this script can be executed with simply
-#the command "./chatserve [PORTNUM] as indicated in the assignment instructions.
+#FTP target with the dependency of ftserver.cpp and command to compile ftserver.cpp into
+#the ftserver executable using g++. Also includes the chmod +x command to add executable permissions
+#to the ftclient file (which is a python file) so that this script can be executed without needing to specify
+#the python version when trying to run the script (i.e. you could do ./ftclient insteady of python3 ./ftclient)
 FTP: ftserver.cpp
-	#gcc -Wall -g -o chatclient chatclient.c
 	g++ -std=c++11 ftserver.cpp -o ftserver
-	chmod +x ftclient
-
+	#chmod +x ftclient
+	chmod +x ftclient.py
+	
 #if the user enters "make clean" or "make cleanall", remove the ftserver executable and
 #remove the executable permissions from the ftclient python file.
 clean:
 	rm -f ftserver
-	chmod -x ftclient
-
+	#chmod -x ftclient
+	chmod -x ftclient.py
 cleanall: 
 	rm -f ftserver
-	chmod -x ftclient
+	#chmod -x ftclient
+	chmod -x ftclient.py
