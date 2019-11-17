@@ -15,8 +15,8 @@ all: FTP
 #the command "./chatserve [PORTNUM] as indicated in the assignment instructions.
 FTP: ftserver.cpp
 	#gcc -Wall -g -o chatclient chatclient.c
-
-	chmod +x chatserve
+	g++ -std=c++11 ftserver.cpp -o ftserver
+	chmod +x ftclient
 
 #if the user enters "make clean" or "make cleanall", remove the ftserver executable and
 #remove the executable permissions from the ftclient python file.
