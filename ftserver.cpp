@@ -62,7 +62,7 @@ void ArgCheck(int argCount, char *args[]){
     if (argCount != 2){
         fprintf(stderr, "Wrong number of arguments! Must enter the correct hostname and a valid port number. Start the program again.\n");
         //fflush(stdout); exit(1);    
-		exit();
+		exit(1);
     }
 	//using atoi to convert from string to int adapted from:
 	//https://www.quora.com/How-do-I-convert-character-value-to-integer-value-in-c-language
