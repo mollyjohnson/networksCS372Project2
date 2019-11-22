@@ -58,10 +58,11 @@ void ArgCheck(int argCount, char *args[]){
 
 	cout << "num args is: " << argCount << " and the arg is: " << args[1] << "\n";
 
-	//arg count must be 3 to be valid
+	//arg count must be 2 to be valid
     if (argCount != 2){
         fprintf(stderr, "Wrong number of arguments! Must enter the correct hostname and a valid port number. Start the program again.\n");
-        fflush(stdout); exit(1);    
+        //fflush(stdout); exit(1);    
+		exit();
     }
 	//using atoi to convert from string to int adapted from:
 	//https://www.quora.com/How-do-I-convert-character-value-to-integer-value-in-c-language
