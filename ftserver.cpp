@@ -51,18 +51,18 @@ using std::istringstream;
 //macro definitions
 #define LIST "-l"
 #define GET "-g"
-#define FT_SERVER_HOST_ADDRESS "flip1.engr.oregonstate.edu"
-#define FT_CLIENT_HOST_ADDRESS "flip2.engr.oregonstate.edu"
+#define SERVER_HOST_ADDRESS "flip1.engr.oregonstate.edu"
+#define CLIENT_HOST_ADDRESS "flip2.engr.oregonstate.edu"
 
 void ArgCheck(int argCount, char *args[]){
 
 	cout << "num args is: " << argCount << " and the arg is: " << args[1] << "\n";
+	fflush(stdout);
 
 	//arg count must be 2 to be valid
     if (argCount != 2){
         fprintf(stderr, "Wrong number of arguments! Must enter the correct hostname and a valid port number. Start the program again.\n");
-        //fflush(stdout); exit(1);    
-		exit(1);
+    	fflush(stdout); exit(1);    
     }
 	//using atoi to convert from string to int adapted from:
 	//https://www.quora.com/How-do-I-convert-character-value-to-integer-value-in-c-language
