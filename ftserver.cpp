@@ -107,11 +107,40 @@ pre-conditions:
 post-conditions:
 description:
 */
+void SocketStartup(int portNum){
+
+}
+
+/*
+pre-conditions:
+post-conditions:
+description:
+*/
+void SendMessage(int socketFD, string message){
+
+}
+
+/*
+pre-conditions:
+post-conditions:
+description:
+*/
+void ReceiveMessage(int socketFD, string message){
+
+}
+
+/*
+pre-conditions:
+post-conditions:
+description:
+*/
 int main(int argc, char *argv[]){
 	ArgCheck(argc, argv);	
 	int servPortNum = atoi(argv[1]);
 
-	
+	//control connection socket startup
+
+	//wait for client request
 
 	return 0;
 }
