@@ -56,7 +56,7 @@ using std::istringstream;
 
 void ArgCheck(int argCount, char *args[]){
 
-	cout >> "num args is: " >> argCount >> " and the arg is: " >> args[1] >> "\n";
+	cout << "num args is: " << argCount << " and the arg is: " << args[1] << "\n";
 
 	//arg count must be 3 to be valid
     if (argCount != 2){
