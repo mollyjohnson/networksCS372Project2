@@ -107,8 +107,20 @@ pre-conditions:
 post-conditions:
 description:
 */
-void SocketStartup(int portNum){
+int SocketStartup(int portNum){
+	/*#socket server setup excerpted from OSU CS 372 lecture 15 slides (specifically, slide 9)
+	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
+	#create socket for server (SOCK_STREAM indicates this is a TCP connection)
+	serverSocket = socket(AF_INET, SOCK_STREAM)
 
+	#bind the socket to the specified host address and server port
+	serverSocket.bind((hostAddress, serverPort))
+
+	#have server start listening for TCP connection requests from clients
+	serverSocket.listen(1)
+
+	return serverSocket
+	*/
 }
 
 /*
@@ -136,11 +148,27 @@ description:
 */
 int main(int argc, char *argv[]){
 	ArgCheck(argc, argv);	
-	int servPortNum = atoi(argv[1]);
+	char const *servPortNum = argv[1];
+
+	int statusControl, socketFDControl;
+	struct addrinfo hintsControl;
+	struct addrinfo *servinfoControl;
+	memset(&hintsControl, 0, sizeof(hintsControl));
+	hintsControl.ai_family = AF_UNSPEC;
+	hintsControl.ai_socktype = SOCK_STREAM;
+	hintsControl.ai_flags = AI_PASSIVE;
 
 	//control connection socket startup
+	statusControl = getaddrinfo(SERVER_HOST_ADDRESS, servPortNum, &hintsControl, &servinfoControl);
+	if (statusControl < 0){
+		fprintf(stderr, "Error getting address info.\n"); fflush(stdout); exit(1);
+	}
 
-	//wait for client request
+	socketFDControl = SocketStartup(atoi(argv[1]));
+
+	while(1){
+
+	}
 
 	return 0;
 }
