@@ -115,10 +115,8 @@ int ServerSocketStartup(char const *portNum, struct addrinfo *servinfo){
 	if (sockFD < 0){
 		fprintf(stderr, "Error creating socket descriptor.\n"); fflush(stdout); exit(1);
 	}
-
 	//bind the socket to the specified host address and server port
 	bind(sockFD, servinfo->ai_addr, servinfo->ai_addrlen);
-
 	//have server start listening for TCP connection requests from clients
 	listen(sockFD, BACKLOG);
 
