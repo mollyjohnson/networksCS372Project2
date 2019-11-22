@@ -97,7 +97,7 @@ void ArgCheck(int argCount, char *args[]){
 	//https://www.quora.com/How-do-I-convert-character-value-to-integer-value-in-c-language
 	//check if arg is a valid integer (and non negative) and aren't above valid port nums
 	if ((!IntInputValidation(args[1])) || (atoi(args[1]) < MIN_PORT) || (atoi(args[1]) > MAX_PORT)){
-		fprintf(stderr, "You entered a string or a port number outside the valid range (1025-65535). Start the program again.\n");
+		fprintf(stderr, "You entered a string or port number outside the valid range (1025-65535). Start the program again.\n");
        	fflush(stdout); exit(1);    
 	}
 }
@@ -109,9 +109,9 @@ description:
 */
 int main(int argc, char *argv[]){
 	ArgCheck(argc, argv);	
-	int portNum = atoi(argv[1]);
+	int servPortNum = atoi(argv[1]);
 
-
+	
 
 	return 0;
 }

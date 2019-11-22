@@ -34,7 +34,7 @@ def ArgCheck():
 	if ((sys.argv[2].isdigit() == False) or (sys.argv[5].isdigit() == False)):
 		print("You entered a negative integer or string for a port number. Must enter a valid port number (1025-65535). Start the program again.")
 		exit()
-	#if a non-neg integer was entered, check it's in valid port num range. valid port number range: 0-65535
+	#if a non-neg integer was entered, check it's in valid port num range. valid port number range: 1025-65535
 	#valid port values excerpted from:
 	#https://www.webopedia.com/quick_ref/portnumbers.asp
 	if ((int(sys.argv[2]) > MAX_PORT) or (int(sys.argv[5]) > MAX_PORT) or (int(sys.argv[2]) < MIN_PORT) or (int(sys.argv[5]) < MIN_PORT)):
@@ -43,12 +43,16 @@ def ArgCheck():
 	if ((int(sys.argv[2])) == (int(sys.argv[5]))):
 		print("You entered the same port number for the control port and data port. This is not allowed. Start the program again.")
 		exit()
+	if(sys.argv[1] != SERVER_HOST_ADDRESS):
+		print("You didn't enter the correct server host address. Make sure to use " + SERVER_HOST_ADDRESS + " for the server host and start the program again.")
+		exit()
 
 #pre-conditions:
 #post-conditions:
 #description:
 def main():
-	ArgCheck()	
+	#check num and validity of the command line args
+	ArgCheck()
 
 #used to call the main function
 #using a main() function in python excerpted from:
