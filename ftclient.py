@@ -15,6 +15,7 @@ import sys
 
 NUM_ARGS = 6
 MAX_PORT = 65535
+MIN_PORT = 1025
 LIST_COMMAND = "-l"
 GET_COMMAND = "-g"
 SERVER_HOST_ADDRESS = "flip1.engr.oregonstate.edu"
@@ -31,13 +32,16 @@ def ArgCheck():
 	#using isdigit() to check if a string represents a non-negative integer adapted from:
 	#https://stackoverflow.com/questions/1265665/how-can-i-check-if-a-string-represents-an-int-without-using-try-except
 	if ((sys.argv[2].isdigit() == False) or (sys.argv[5].isdigit() == False)):
-		print("You entered a negative integer or string for a port number. Must enter a valid port number. Start the program again.")
+		print("You entered a negative integer or string for a port number. Must enter a valid port number (1025-65535). Start the program again.")
 		exit()
 	#if a non-neg integer was entered, check it's in valid port num range. valid port number range: 0-65535
 	#valid port values excerpted from:
 	#https://www.webopedia.com/quick_ref/portnumbers.asp
-	if ((int(sys.argv[2]) > MAX_PORT) or (int(sys.argv[5]) > MAX_PORT)):
-		print("You entered a port number above the valid port number range. Must enter a valid port number. Start the program again.")
+	if ((int(sys.argv[2]) > MAX_PORT) or (int(sys.argv[5]) > MAX_PORT) or (int(sys.argv[2]) < MIN_PORT) or (int(sys.argv[5]) < MIN_PORT)):
+		print("You entered a port number outside the valid port number range (1025-65535). Must enter a valid port number. Start the program again.")
+		exit()
+	if ((int(sys.argv[2])) == (int(sys.argv[5]))):
+		print("You entered the same port number for the control port and data port. This is not allowed. Start the program again.")
 		exit()
 
 #pre-conditions:

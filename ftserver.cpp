@@ -53,8 +53,8 @@ using std::istringstream;
 #define GET_COMMAND "-g"
 #define SERVER_HOST_ADDRESS "flip1.engr.oregonstate.edu"
 #define CLIENT_HOST_ADDRESS "flip2.engr.oregonstate.edu"
-#define MIN_PORT 0
 #define MAX_PORT 65535
+#define MIN_PORT 1025
 #define NUM_ARGS 2
 
 /*
@@ -97,7 +97,7 @@ void ArgCheck(int argCount, char *args[]){
 	//https://www.quora.com/How-do-I-convert-character-value-to-integer-value-in-c-language
 	//check if arg is a valid integer (and non negative) and aren't above valid port nums
 	if ((!IntInputValidation(args[1])) || (atoi(args[1]) < MIN_PORT) || (atoi(args[1]) > MAX_PORT)){
-		fprintf(stderr, "You entered a negative number, string, or port number above the valid range (65535). Start the program again.\n");
+		fprintf(stderr, "You entered a string or a port number outside the valid range (1025-65535). Start the program again.\n");
        	fflush(stdout); exit(1);    
 	}
 }
