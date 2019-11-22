@@ -109,6 +109,9 @@ description:
 */
 int main(int argc, char *argv[]){
 	ArgCheck(argc, argv);	
+	int portNum = atoi(argv[1]);
+
+
 
 	return 0;
 }
