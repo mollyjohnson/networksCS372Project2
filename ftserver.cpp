@@ -48,8 +48,34 @@ using std::getline;
 using std::stringstream;
 using std::istringstream;
 
-int main(){
-	
+//macro definitions
+#define LIST "-l"
+#define GET "-g"
+#define FT_SERVER_HOST_ADDRESS "flip1.engr.oregonstate.edu"
+#define FT_CLIENT_HOST_ADDRESS "flip2.engr.oregonstate.edu"
+
+void ArgCheck(int argCount, char *args[]){
+
+	cout >> "num args is: " >> argCount >> " and the arg is: " >> args[1] >> "\n";
+
+	//arg count must be 3 to be valid
+    if (argCount != 2){
+        fprintf(stderr, "Wrong number of arguments! Must enter the correct hostname and a valid port number. Start the program again.\n");
+        fflush(stdout); exit(1);    
+    }
+	//using atoi to convert from string to int adapted from:
+	//https://www.quora.com/How-do-I-convert-character-value-to-integer-value-in-c-language
+	//check if arg is a valid integer (and non negative) and aren't above valid port nums
+	/*
+	if ((!IntInputValidation(args[2])) || (atoi(args[2]) < 0 ) || (atoi(args[2]) > 65535)){
+		fprintf(stderr, "You entered a negative number, string or otherwise invalid port number argument. Start the program again.\n");
+       	fflush(stdout); exit(1);    
+	}
+	*/
+}
+
+int main(int argc, char *argv[]){
+	ArgCheck(argc, argv);	
 
 	return 0;
 }
