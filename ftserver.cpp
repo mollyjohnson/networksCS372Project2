@@ -49,8 +49,8 @@ using std::stringstream;
 using std::istringstream;
 
 //macro definitions
-#define LIST "-l"
-#define GET "-g"
+#define LIST_COMMAND "-l"
+#define GET_COMMAND "-g"
 #define SERVER_HOST_ADDRESS "flip1.engr.oregonstate.edu"
 #define CLIENT_HOST_ADDRESS "flip2.engr.oregonstate.edu"
 #define MIN_PORT 0
@@ -90,7 +90,7 @@ description:
 void ArgCheck(int argCount, char *args[]){
 	//arg count must be 2 to be valid
     if (argCount != NUM_ARGS){
-        fprintf(stderr, "Wrong number of arguments! Must enter the correct hostname and a valid port number. Start the program again.\n");
+        fprintf(stderr, "Wrong number of arguments! Must enter a valid port number. Start the program again.\n");
     	fflush(stdout); exit(1);    
     }
 	//using atoi to convert from string to int adapted from:
