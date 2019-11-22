@@ -107,7 +107,7 @@ pre-conditions:
 post-conditions:
 description:
 */
-int SocketStartup(int portNum){
+int SocketStartup(char const *portNum){
 	/*#socket server setup excerpted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
 	#create socket for server (SOCK_STREAM indicates this is a TCP connection)
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]){
 		fprintf(stderr, "Error getting address info.\n"); fflush(stdout); exit(1);
 	}
 
-	socketFDControl = SocketStartup(atoi(argv[1]));
+	socketFDControl = SocketStartup(servPortNum);
 
 	while(1){
 
