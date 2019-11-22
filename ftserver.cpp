@@ -56,6 +56,7 @@ using std::istringstream;
 #define MAX_PORT 65535
 #define MIN_PORT 1025
 #define NUM_ARGS 2
+#define BACKLOG 20
 
 /*
 pre-conditions:
@@ -107,20 +108,21 @@ pre-conditions:
 post-conditions:
 description:
 */
-int SocketStartup(char const *portNum){
-	/*#socket server setup excerpted from OSU CS 372 lecture 15 slides (specifically, slide 9)
-	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
-	#create socket for server (SOCK_STREAM indicates this is a TCP connection)
-	serverSocket = socket(AF_INET, SOCK_STREAM)
+int ServerSocketStartup(char const *portNum, struct addrinfo *servinfo){
+	//create socket w server info
+	int sockFD = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol);
+	//if socket file descriptor <0, was an error
+	if (sockFD < 0){
+		fprintf(stderr, "Error creating socket descriptor.\n"); fflush(stdout); exit(1);
+	}
 
-	#bind the socket to the specified host address and server port
-	serverSocket.bind((hostAddress, serverPort))
+	//bind the socket to the specified host address and server port
+	bind(sockFD, servinfo->ai_addr, servinfo->ai_addrlen);
 
-	#have server start listening for TCP connection requests from clients
-	serverSocket.listen(1)
+	//have server start listening for TCP connection requests from clients
+	listen(sockFD, BACKLOG);
 
-	return serverSocket
-	*/
+	return sockFD;
 }
 
 /*
@@ -164,7 +166,7 @@ int main(int argc, char *argv[]){
 		fprintf(stderr, "Error getting address info.\n"); fflush(stdout); exit(1);
 	}
 
-	socketFDControl = SocketStartup(servPortNum);
+	socketFDControl = ServerSocketStartup(servPortNum, servinfoControl);
 
 	while(1){
 
