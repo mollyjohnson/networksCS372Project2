@@ -53,28 +53,60 @@ using std::istringstream;
 #define GET "-g"
 #define SERVER_HOST_ADDRESS "flip1.engr.oregonstate.edu"
 #define CLIENT_HOST_ADDRESS "flip2.engr.oregonstate.edu"
+#define MIN_PORT 0
+#define MAX_PORT 65535
+#define NUM_ARGS 2
 
+/*
+pre-conditions:
+post-conditions:
+description:
+*/  
+int IntInputValidation(string inputString){
+	//create variables for char to be checked, loop counter, and length of the input string
+	char asciiValue;
+	int inputLength = inputString.length();
+
+	//loop through entire string so can check each char
+	for(int i = 0; i < inputLength; i++){
+		//set temp char equal to the current string char
+		asciiValue = inputString[i];
+
+		//check if the current char is within the valid ascii values for ints 0-9 (i.e. ascii values 48-57)
+		if((asciiValue < 48) || (asciiValue > 57)){
+			//if ascii value of char being checked is outside of the range for integers, return false
+			return false;
+		}
+	}
+	//if all of the chars in the string to be checked were valid integers, return true
+	return true;
+}
+
+/*
+pre-conditions:
+post-conditions:
+description:
+*/
 void ArgCheck(int argCount, char *args[]){
-
-	cout << "num args is: " << argCount << " and the arg is: " << args[1] << "\n";
-	fflush(stdout);
-
 	//arg count must be 2 to be valid
-    if (argCount != 2){
+    if (argCount != NUM_ARGS){
         fprintf(stderr, "Wrong number of arguments! Must enter the correct hostname and a valid port number. Start the program again.\n");
     	fflush(stdout); exit(1);    
     }
 	//using atoi to convert from string to int adapted from:
 	//https://www.quora.com/How-do-I-convert-character-value-to-integer-value-in-c-language
 	//check if arg is a valid integer (and non negative) and aren't above valid port nums
-	/*
-	if ((!IntInputValidation(args[2])) || (atoi(args[2]) < 0 ) || (atoi(args[2]) > 65535)){
-		fprintf(stderr, "You entered a negative number, string or otherwise invalid port number argument. Start the program again.\n");
+	if ((!IntInputValidation(args[1])) || (atoi(args[1]) < MIN_PORT) || (atoi(args[1]) > MAX_PORT)){
+		fprintf(stderr, "You entered a negative number, string, or port number above the valid range (65535). Start the program again.\n");
        	fflush(stdout); exit(1);    
 	}
-	*/
 }
 
+/*
+pre-conditions:
+post-conditions:
+description:
+*/
 int main(int argc, char *argv[]){
 	ArgCheck(argc, argv);	
 
