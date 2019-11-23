@@ -70,7 +70,10 @@ def main():
 
 	socketFDControl = InitiateContact(controlPort, serverHost)
 
-	#socketFDControl.close()
+	sentence = "greetings, control connection"
+	socketFDControl.send(sentence)
+
+	socketFDControl.close()
 
 #used to call the main function
 #using a main() function in python excerpted from:

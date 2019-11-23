@@ -137,8 +137,20 @@ pre-conditions:
 post-conditions:
 description:
 */
-void ReceiveMessage(int socketFD, string message){
+string ReceiveMessage(int socketFD){
+	int charsR;
+	char recvBuffer[500];
+	memset(recvBuffer, '\0', sizeof(recvBuffer));
 
+	//receive message of size max num of message chars plus max num handle chars minus 1
+	charsR = recv(sockFD, recvBuffer, (500 - 1), 0);
+	//check if the num of chars received is <0
+	if (charsR < 0){
+		fprintf(stderr, "Error reading from the socket.\n"); fflush(stdout); exit(1);
+	}
+
+	string message = recvBuffer;
+	return message;
 }
 
 /*
@@ -158,6 +170,8 @@ int main(int argc, char *argv[]){
 	hintsControl.ai_socktype = SOCK_STREAM;
 	hintsControl.ai_flags = AI_PASSIVE;
 
+	string messageReceived;
+
 	//control connection socket startup
 	statusControl = getaddrinfo(SERVER_HOST_ADDRESS, controlPort, &hintsControl, &servinfoControl);
 	if (statusControl < 0){
@@ -167,6 +181,7 @@ int main(int argc, char *argv[]){
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
 	while(1){
+		messageReceived = ReceiveMessage(controlPort);
 		
 		close(socketFDControl);
 	}
