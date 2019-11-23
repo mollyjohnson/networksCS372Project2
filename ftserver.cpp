@@ -137,7 +137,7 @@ pre-conditions:
 post-conditions:
 description:
 */
-string ReceiveMessage(int socketFD){
+string ReceiveMessage(int sockFD){
 	int charsR;
 	char recvBuffer[500];
 	memset(recvBuffer, '\0', sizeof(recvBuffer));
@@ -181,7 +181,7 @@ int main(int argc, char *argv[]){
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
 	while(1){
-		messageReceived = ReceiveMessage(controlPort);
+		messageReceived = ReceiveMessage(socketFDControl);
 		
 		close(socketFDControl);
 	}
