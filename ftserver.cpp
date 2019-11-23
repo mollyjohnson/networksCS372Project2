@@ -148,7 +148,7 @@ description:
 */
 int main(int argc, char *argv[]){
 	ArgCheck(argc, argv);	
-	char const *servPortNum = argv[1];
+	char const *controlPort = argv[1];
 
 	int statusControl, socketFDControl;
 	struct addrinfo hintsControl;
@@ -159,16 +159,18 @@ int main(int argc, char *argv[]){
 	hintsControl.ai_flags = AI_PASSIVE;
 
 	//control connection socket startup
-	statusControl = getaddrinfo(SERVER_HOST_ADDRESS, servPortNum, &hintsControl, &servinfoControl);
+	statusControl = getaddrinfo(SERVER_HOST_ADDRESS, controlPort, &hintsControl, &servinfoControl);
 	if (statusControl < 0){
 		fprintf(stderr, "Error getting address info.\n"); fflush(stdout); exit(1);
 	}
 
-	socketFDControl = ServerSocketStartup(servPortNum, servinfoControl);
+	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
 	while(1){
 
 	}
+	close(socketFDControl);
+	freeaddrinfo(servinfoControl);
 
 	return 0;
 }

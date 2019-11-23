@@ -50,9 +50,27 @@ def ArgCheck():
 #pre-conditions:
 #post-conditions:
 #description:
+def InitiateContact(portNum, hostName):
+	sockFD = socket(AF_INET, SOCK_STREAM)
+	sockFD.connect((hostName, portNum))
+
+	return sockFD
+
+#pre-conditions:
+#post-conditions:
+#description:
 def main():
 	#check num and validity of the command line args
 	ArgCheck()
+	controlPort = int(sys.argv[2])
+	serverHost = sys.argv[1]
+	command = sys.argv[3]
+	filename = sys.argv[4]
+	dataPort = int(sys.argv[5])
+
+	socketFDControl = InitiateContact(controlPort, serverHost)
+
+	#socketFDControl.close()
 
 #used to call the main function
 #using a main() function in python excerpted from:
