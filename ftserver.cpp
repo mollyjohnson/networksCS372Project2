@@ -138,7 +138,7 @@ post-conditions:
 description:
 */
 string ReceiveMessage(int sockFD){
-	int charsR;
+	int charsR = -1;
 	char recvBuffer[500];
 	memset(recvBuffer, '\0', sizeof(recvBuffer));
 
@@ -149,6 +149,7 @@ string ReceiveMessage(int sockFD){
 		fprintf(stderr, "Error reading from the socket.\n"); fflush(stdout); exit(1);
 	}
 
+	cout << "your message is: " << recvBuffer << "\n";
 	string message = recvBuffer;
 	return message;
 }
@@ -180,11 +181,13 @@ int main(int argc, char *argv[]){
 
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
-	while(1){
+	int k = 0;
+	while(k<16){
 		messageReceived = ReceiveMessage(socketFDControl);
-		
-		close(socketFDControl);
+		cout << messageReceived << "\n";
+		k++;
 	}
+	close(socketFDControl);
 	freeaddrinfo(servinfoControl);
 
 	return 0;
