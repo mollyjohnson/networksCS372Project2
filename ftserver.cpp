@@ -167,9 +167,9 @@ int main(int argc, char *argv[]){
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
 	while(1){
-
+		
+		close(socketFDControl);
 	}
-	close(socketFDControl);
 	freeaddrinfo(servinfoControl);
 
 	return 0;
