@@ -137,9 +137,9 @@ pre-conditions:
 post-conditions:
 description:
 */
-string ReceiveMessage(int sockFD){
+string ReceiveMessage(int sockFD, struct addrinfo *servinfo){
 	int sizeofClient = sizeof(SERVER_HOST_ADDRESS);
-	int establishedConnection = accept(sockFD, (struct sockaddr *)&SERVER_HOST_ADDRESS, sizeof(SERVER_HOST_ADDRESS));
+	int establishedConnection = accept(sockFD, servinfo->ai_addr, servinfo->ai_addrlen);
 	if (establishedConnection < 0){
 		fprintf(stderr, "ERROR on accept\n");
 		fflush(stdout);
@@ -189,7 +189,7 @@ int main(int argc, char *argv[]){
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
 	while(1){
-		messageReceived = ReceiveMessage(socketFDControl);
+		messageReceived = ReceiveMessage(socketFDControl, servinfoControl);
 		cout << messageReceived << "\n";
 		close(socketFDControl);
 	}
