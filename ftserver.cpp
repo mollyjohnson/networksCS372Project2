@@ -211,10 +211,10 @@ int main(int argc, char *argv[]){
 		else{
 			filename = messageReceived;
 		}
-		close(socketFDControl);
 	}
 	cout << "the command is: " << command << "\n";
 	cout << "the filename is: " << filename << "\n";
+	close(socketFDControl);
 	freeaddrinfo(servinfoControl);
 
 	return 0;
