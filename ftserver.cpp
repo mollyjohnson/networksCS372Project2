@@ -138,6 +138,13 @@ post-conditions:
 description:
 */
 string ReceiveMessage(int sockFD){
+	int sizeofClient = sizeof(SERVER_HOST_ADDRESS);
+	int establishedConnection = accept(sockFD, (struct sockaddr *)&SERVER_HOST_ADDRESS, sizeof(SERVER_HOST_ADDRESS));
+	if (establishedConnection < 0){
+		fprintf(stderr, "ERROR on accept\n");
+		fflush(stdout);
+		exit(1);
+	}
 	int charsR = -1;
 	char recvBuffer[500];
 	memset(recvBuffer, '\0', sizeof(recvBuffer));
