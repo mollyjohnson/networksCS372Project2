@@ -108,6 +108,22 @@ pre-conditions:
 post-conditions:
 description:
 */
+int AcceptConnection(int sockFD, struct sockaddr_storage their_addr){
+	socklen_t addr_size = sizeof their_addr;
+	int newFD = accept(sockFD, (struct sockaddr *)&their_addr, &addr_size);
+	if (newFD < 0){
+		fprintf(stderr, "ERROR on accept\n");
+		fflush(stdout);
+		exit(1);
+	}
+	return newFD;
+}
+
+/*
+pre-conditions:
+post-conditions:
+description:
+*/
 int ServerSocketStartup(char const *portNum, struct addrinfo *servinfo){
 	//create socket w server info
 	int sockFD = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol);
@@ -137,14 +153,8 @@ pre-conditions:
 post-conditions:
 description:
 */
-string ReceiveMessage(int sockFD, struct sockaddr_storage their_addr){
-	socklen_t addr_size = sizeof their_addr;
-	int newFD = accept(sockFD, (struct sockaddr *)&their_addr, &addr_size);
-	if (newFD < 0){
-		fprintf(stderr, "ERROR on accept\n");
-		fflush(stdout);
-		exit(1);
-	}
+string ReceiveMessage(int newFD){
+	
 	int charsR = -1;
 	char recvBuffer[500];
 	memset(recvBuffer, '\0', sizeof(recvBuffer));
@@ -156,7 +166,6 @@ string ReceiveMessage(int sockFD, struct sockaddr_storage their_addr){
 		fprintf(stderr, "Error reading from the socket.\n"); fflush(stdout); exit(1);
 	}
 
-	cout << "your message is: " << recvBuffer << "\n";
 	string message = recvBuffer;
 	return message;
 }
@@ -170,7 +179,7 @@ int main(int argc, char *argv[]){
 	ArgCheck(argc, argv);	
 	char const *controlPort = argv[1];
 
-	int statusControl, socketFDControl;
+	int statusControl, socketFDControl, newSocketFDControl;
 	struct addrinfo hintsControl;
 	struct addrinfo *servinfoControl;
 	memset(&hintsControl, 0, sizeof(hintsControl));
@@ -189,11 +198,15 @@ int main(int argc, char *argv[]){
 
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
-	while(1){
-		messageReceived = ReceiveMessage(socketFDControl, their_addr);
+	newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
+	
+	//while(1){
+	for (int i = 0; i < 2; i++){
+		messageReceived = ReceiveMessage(newSocketFDControl);
 		cout << messageReceived << "\n";
-		//close(socketFDControl);
+		close(socketFDControl);
 	}
+	//}
 	freeaddrinfo(servinfoControl);
 
 	return 0;
