@@ -137,10 +137,10 @@ pre-conditions:
 post-conditions:
 description:
 */
-string ReceiveMessage(int sockFD){
-	int sizeofClient = sizeof(SERVER_HOST_ADDRESS);
-	int establishConnection = accept(sockFD,NULL, NULL);
-	if (establishConnection < 0){
+string ReceiveMessage(int sockFD, struct sockaddr_storage their_addr){
+	socklen_t addr_size = sizeof their_addr;
+	int newFD = accept(sockFD, (struct sockaddr *)&their_addr, &addr_size);
+	if (newFD < 0){
 		fprintf(stderr, "ERROR on accept\n");
 		fflush(stdout);
 		exit(1);
@@ -150,7 +150,7 @@ string ReceiveMessage(int sockFD){
 	memset(recvBuffer, '\0', sizeof(recvBuffer));
 
 	//receive message of size max num of message chars plus max num handle chars minus 1
-	charsR = recv(sockFD, recvBuffer, (500 - 1), 0);
+	charsR = recv(newFD, recvBuffer, (500 - 1), 0);
 	//check if the num of chars received is <0
 	if (charsR < 0){
 		fprintf(stderr, "Error reading from the socket.\n"); fflush(stdout); exit(1);
@@ -177,6 +177,7 @@ int main(int argc, char *argv[]){
 	hintsControl.ai_family = AF_UNSPEC;
 	hintsControl.ai_socktype = SOCK_STREAM;
 	hintsControl.ai_flags = AI_PASSIVE;
+	struct sockaddr_storage their_addr;
 
 	string messageReceived;
 
@@ -189,7 +190,7 @@ int main(int argc, char *argv[]){
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
 	while(1){
-		messageReceived = ReceiveMessage(socketFDControl);
+		messageReceived = ReceiveMessage(socketFDControl, their_addr);
 		cout << messageReceived << "\n";
 		close(socketFDControl);
 	}

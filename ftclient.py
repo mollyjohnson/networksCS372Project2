@@ -70,10 +70,8 @@ def main():
 
 	socketFDControl = InitiateContact(controlPort, serverHost)
 
-	print("please enter your sentence:")
-	sentence = input()
+	sentence = "test control message"
 	socketFDControl.send((sentence).encode())
-	print("your message was sent")
 
 	socketFDControl.close()
 
