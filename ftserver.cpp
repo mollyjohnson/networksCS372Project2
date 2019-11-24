@@ -189,6 +189,8 @@ int main(int argc, char *argv[]){
 	struct sockaddr_storage their_addr;
 
 	string messageReceived;
+	string command;
+	string filename;
 
 	//control connection socket startup
 	statusControl = getaddrinfo(SERVER_HOST_ADDRESS, controlPort, &hintsControl, &servinfoControl);
@@ -201,11 +203,18 @@ int main(int argc, char *argv[]){
 	newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 	
 	//while(1){
-	for (int i = 0; i < 3; i++){
+	for (int i = 0; i < 2; i++){
 		messageReceived = ReceiveMessage(newSocketFDControl);
-		cout << messageReceived << "\n";
+		if(i == 1){
+			command = messageReceived;
+		}
+		else{
+			filename = messageReceived;
+		}
 		close(socketFDControl);
 	}
+	cout << "the command is: " << command << "\n";
+	cout << "the filename is: " << filename << "\n";
 	freeaddrinfo(servinfoControl);
 
 	return 0;
