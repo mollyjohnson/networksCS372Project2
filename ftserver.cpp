@@ -201,12 +201,11 @@ int main(int argc, char *argv[]){
 	newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 	
 	//while(1){
-	for (int i = 0; i < 2; i++){
+	for (int i = 0; i < 3; i++){
 		messageReceived = ReceiveMessage(newSocketFDControl);
 		cout << messageReceived << "\n";
 		close(socketFDControl);
 	}
-	//}
 	freeaddrinfo(servinfoControl);
 
 	return 0;
