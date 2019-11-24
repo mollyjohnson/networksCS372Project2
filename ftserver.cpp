@@ -192,7 +192,7 @@ int main(int argc, char *argv[]){
 	while(1){
 		messageReceived = ReceiveMessage(socketFDControl, their_addr);
 		cout << messageReceived << "\n";
-		close(socketFDControl);
+		//close(socketFDControl);
 	}
 	freeaddrinfo(servinfoControl);
 

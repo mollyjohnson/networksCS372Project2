@@ -73,7 +73,7 @@ def main():
 	sentence = "test control message"
 	socketFDControl.send((sentence).encode())
 
-	socketFDControl.close()
+	#socketFDControl.close()
 
 #used to call the main function
 #using a main() function in python excerpted from:
