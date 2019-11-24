@@ -154,7 +154,6 @@ post-conditions:
 description:
 */
 string ReceiveMessage(int newFD){
-	
 	int charsR = -1;
 	char recvBuffer[500];
 	memset(recvBuffer, '\0', sizeof(recvBuffer));
