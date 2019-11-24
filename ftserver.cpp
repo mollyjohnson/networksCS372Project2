@@ -57,7 +57,7 @@ using std::istringstream;
 #define MIN_PORT 1025
 #define NUM_ARGS 2
 #define BACKLOG 20
-#define NONE "NONE"
+
 /*
 pre-conditions:
 post-conditions:
@@ -174,15 +174,9 @@ pre-conditions:
 post-conditions:
 description:
 */
-bool ParseMessage(string controlMsgRecd, const string delimiter, string *command, string *filename){
-char *p = strstr(controlMsgRecd, delimiter);
-	if(p){
-		cout << "string found!\n";
-		cout << "first occurrence of string " << delimiter << " in " << controlMsgRecd << " is: " << p << "\n"; 
-		return true;
-	}
-	cout << "string not found\n";
-	return false;
+bool ParseMessage(string controlMsgRecd, const char delimiter){
+	cout << "the delimiter is: " << delimiter << "\n";
+	return true;
 }
 
 /*
@@ -207,7 +201,7 @@ int main(int argc, char *argv[]){
 	string command;
 	string filename;
 	bool isFileName = false;
-	const string delimiter = "%%";
+	const char delimiter = 37;
 
 	//control connection socket startup
 	statusControl = getaddrinfo(SERVER_HOST_ADDRESS, controlPort, &hintsControl, &servinfoControl);
@@ -223,14 +217,9 @@ int main(int argc, char *argv[]){
 		newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 		controlMsgRecd = ReceiveMessage(newSocketFDControl);
 		cout << "the received control message from the client is: " << controlMsgRecd << "\n";
-		isFileName = ParseMessage(controlMsgRecd, delimiter, &command, &filename);
+		isFileName = ParseMessage(controlMsgRecd, delimiter);
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
-		if (isFileName){
-			cout << "found delimiter\n";
-		}
-		else
-			cout << "no delim found\n";
 		close(newSocketFDControl);
 	}
 	freeaddrinfo(servinfoControl);
