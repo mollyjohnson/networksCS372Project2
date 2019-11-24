@@ -67,8 +67,8 @@ def main():
 	command = sys.argv[3]
 	filename = sys.argv[4]
 	dataPort = int(sys.argv[5])
-	delimiter = chr(216) + chr(216) + chr(216)
-	#delimiter = chr(3) + chr(3) + chr(3)
+	#delimiter = chr(216) + chr(216) + chr(216)
+	delimiter = chr(3) + chr(3) + chr(3)
 	controlMessage = (command + delimiter + filename)
 
 	socketFDControl = InitiateContact(controlPort, serverHost)

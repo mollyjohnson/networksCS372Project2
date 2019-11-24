@@ -199,16 +199,16 @@ int main(int argc, char *argv[]){
 
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
-	newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 	
 	//NEED LOOP HERE TO HAVE SOCKET SERVER OPEN AND WAITING FOR MORE CONNECTIONS
-	//while(1){
-	controlMsgRecd = ReceiveMessage(newSocketFDControl);
-
-	close(socketFDControl);
-	cout << "the received control message from the client is: " << controlMsgRecd << "\n";
-	cout << "the command out of loop is: " << command << "\n";
-	cout << "the filename out of loop is: " << filename << "\n";
+	while(1){
+		newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
+		controlMsgRecd = ReceiveMessage(newSocketFDControl);
+		cout << "the received control message from the client is: " << controlMsgRecd << "\n";
+		cout << "the command out of loop is: " << command << "\n";
+		cout << "the filename out of loop is: " << filename << "\n";
+		close(newSocketFDControl);
+	}
 	freeaddrinfo(servinfoControl);
 
 	return 0;
