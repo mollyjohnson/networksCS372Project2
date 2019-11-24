@@ -200,13 +200,14 @@ bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command,
 				filename = tokens[i];
 			}
 			else{
-				cout << "something went wrong, your vector has more than 2 split messages\n";
+				fprintf(stderr,"something went wrong, your control message vector has more than 2 split messages\n");
+				fflush(stdout); exit(1);
 			}
 		}
 		return true;
 	}
 	else{
-		cout << "something went wrong here, tokens vect size < 1\n";
+		fprintf(stderr,"something went wrong here, control message tokens vect size < 1\n");
 		fflush(stdout); exit(1);
 	}
 }
