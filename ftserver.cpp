@@ -57,6 +57,7 @@ using std::istringstream;
 #define MIN_PORT 1025
 #define NUM_ARGS 2
 #define BACKLOG 20
+#define DELIMITER '216'
 
 /*
 pre-conditions:
@@ -145,7 +146,7 @@ post-conditions:
 description:
 */
 void SendMessage(int socketFD, string message){
-
+	cout << 
 }
 
 /*
@@ -168,7 +169,9 @@ string ReceiveMessage(int newFD){
 	string message = recvBuffer;
 	return message;
 }
-
+bool ParseMessage(controlMsgRecd){
+	cout << "the delimiter is: " << DELIMITER << "\n";
+}
 /*
 pre-conditions:
 post-conditions:
@@ -190,6 +193,7 @@ int main(int argc, char *argv[]){
 	string controlMsgRecd;
 	string command;
 	string filename;
+	bool isFileName = false;
 
 	//control connection socket startup
 	statusControl = getaddrinfo(SERVER_HOST_ADDRESS, controlPort, &hintsControl, &servinfoControl);
@@ -205,6 +209,7 @@ int main(int argc, char *argv[]){
 		newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 		controlMsgRecd = ReceiveMessage(newSocketFDControl);
 		cout << "the received control message from the client is: " << controlMsgRecd << "\n";
+		isFileName = ParseMessage(controlMsgRecd);
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
 		close(newSocketFDControl);
