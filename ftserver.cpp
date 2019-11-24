@@ -201,6 +201,7 @@ int main(int argc, char *argv[]){
 
 	newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 	
+	//NEED LOOP HERE TO HAVE SOCKET SERVER OPEN AND WAITING FOR MORE CONNECTIONS
 	//while(1){
 	controlMsgRecd = ReceiveMessage(newSocketFDControl);
 
