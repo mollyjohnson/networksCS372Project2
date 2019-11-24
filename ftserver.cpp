@@ -48,6 +48,7 @@ using std::vector;
 using std::getline;
 using std::stringstream;
 using std::istringstream;
+using std::basic_string;
 
 //macro definitions
 #define LIST_COMMAND "-l"
@@ -176,19 +177,18 @@ pre-conditions:
 post-conditions:
 description:
 */
-bool ParseMessage(string controlMsgRecd, string delimiter, string *command, string *filename){
+bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command, string &filename){
 	vector <string> tokens;
-	stringstream check1(line);
-	string intermediateMessage;
+	stringstream check1(controlMsgRecd);
+	string intermediate;
 
-	while(getline(check1, intermediateMessage, delimiter)){
-		tokens.push_back(intermediateMessage);
+	while(getline(check1, intermediate, delimiter)){
+		tokens.push_back(intermediate);
 	}
+	cout << "the size of your tokens vector is: " << tokens.size() << "\n";
 	if (tokens.size() == 1){
 		command = tokens[0];
-		cout << "the parsed command is: " << command << "\n";
 		filename = NONE;
-		cout << "the parsed filename is: " << filename << "\n";
 		return false;
 	}
 	if (tokens.size() > 1){
@@ -196,22 +196,19 @@ bool ParseMessage(string controlMsgRecd, string delimiter, string *command, stri
 			if(i == 0){
 				command = tokens[i];
 			}	
-			if(i == 1){
+			else if(i == 1){
 				filename = tokens[i];
 			}
 			else{
 				cout << "something went wrong, your vector has more than 2 split messages\n";
 			}
 		}
-		cout << "the parsed command is: " << command << "\n";
-		cout << "the parsed filename is: " << filename << "\n";
 		return true;
 	}
 	else{
 		cout << "something went wrong here, tokens vect size < 1\n";
-		return false;
+		fflush(stdout); exit(1);
 	}
-	
 }
 
 /*
@@ -236,7 +233,7 @@ int main(int argc, char *argv[]){
 	string command;
 	string filename;
 	bool isFileName = false;
-	string delimiter = "%%";
+	char delimiter = '%';
 
 	//control connection socket startup
 	statusControl = getaddrinfo(SERVER_HOST_ADDRESS, controlPort, &hintsControl, &servinfoControl);
@@ -251,7 +248,7 @@ int main(int argc, char *argv[]){
 		newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 		controlMsgRecd = ReceiveMessage(newSocketFDControl);
 		cout << "the received control message from the client is: " << controlMsgRecd << "\n";
-		isFileName = ParseMessage(controlMsgRecd, delimiter, &command, &filename);
+		isFileName = ParseControlMessage(controlMsgRecd, delimiter, command, filename);
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
 		cout << "the result of isFileName bool is: " << isFileName << "\n";
