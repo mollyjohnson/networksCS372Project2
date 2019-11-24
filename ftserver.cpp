@@ -202,19 +202,20 @@ int main(int argc, char *argv[]){
 
 	newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 	
-	//while(1){
-	for (int i = 0; i < 2; i++){
-		messageReceived = ReceiveMessage(newSocketFDControl);
-		if(i == 0){
-			command = messageReceived;
+	while(1){
+		for (int i = 0; i < 2; i++){
+			messageReceived = ReceiveMessage(newSocketFDControl);
+			if(i == 0){
+				command = messageReceived;
+				cout << "the command is: " << command << "\n";
+			}
+			else{
+				filename = messageReceived;
+				cout << "the filename is: " << filename << "\n";
+			}
+			close(socketFDControl);
 		}
-		else{
-			filename = messageReceived;
-		}
-		close(socketFDControl);
 	}
-	cout << "the command is: " << command << "\n";
-	cout << "the filename is: " << filename << "\n";
 	freeaddrinfo(servinfoControl);
 
 	return 0;
