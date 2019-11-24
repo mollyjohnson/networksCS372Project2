@@ -181,13 +181,11 @@ int main(int argc, char *argv[]){
 
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
-	int k = 0;
-	while(k<16){
+	while(1){
 		messageReceived = ReceiveMessage(socketFDControl);
 		cout << messageReceived << "\n";
-		k++;
+		close(socketFDControl);
 	}
-	close(socketFDControl);
 	freeaddrinfo(servinfoControl);
 
 	return 0;

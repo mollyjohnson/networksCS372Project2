@@ -407,7 +407,7 @@ for connection initiation, create and initialize variables, and do major loop fo
 until the client or server enters the "\quit" message, upon which time it will terminate the program.
 */
 int main(int argc, char *argv[]){
-    ArgCheck(argc, argv);
+   // ArgCheck(argc, argv);
 		
 	//using atoi to convert from string to int adapted from:
 	//https://www.quora.com/How-do-I-convert-character-value-to-integer-value-in-c-language
