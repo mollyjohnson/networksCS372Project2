@@ -188,7 +188,7 @@ int main(int argc, char *argv[]){
 	hintsControl.ai_flags = AI_PASSIVE;
 	struct sockaddr_storage their_addr;
 
-	string messageReceived;
+	string controlMsgRecd;
 	string command;
 	string filename;
 
@@ -203,18 +203,12 @@ int main(int argc, char *argv[]){
 	newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 	
 	//while(1){
-	for (int i = 0; i < 2; i++){
-		messageReceived = ReceiveMessage(newSocketFDControl);
-		if(i == 0){
-			command = messageReceived;
-		}
-		else{
-			filename = messageReceived;
-		}
-	}
-	cout << "the command is: " << command << "\n";
-	cout << "the filename is: " << filename << "\n";
+	controlMsgRecd = ReceiveMessage(newSocketFDControl);
+
 	close(socketFDControl);
+	cout << "the received control message from the client is: " << controlMsgRecd << "\n";
+	cout << "the command out of loop is: " << command << "\n";
+	cout << "the filename out of loop is: " << filename << "\n";
 	freeaddrinfo(servinfoControl);
 
 	return 0;
