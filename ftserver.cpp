@@ -57,6 +57,8 @@ using std::istringstream;
 #define MIN_PORT 1025
 #define NUM_ARGS 2
 #define BACKLOG 20
+#define DELIMITER "%%"
+#define NONE "NONE"
 
 /*
 pre-conditions:
@@ -174,8 +176,8 @@ pre-conditions:
 post-conditions:
 description:
 */
-bool ParseMessage(string controlMsgRecd, const char delimiter){
-	cout << "the delimiter is: " << delimiter << "\n";
+bool ParseMessage(string controlMsgRecd, string DELIMITER, string *command, string *filename){
+
 	return true;
 }
 
@@ -201,7 +203,6 @@ int main(int argc, char *argv[]){
 	string command;
 	string filename;
 	bool isFileName = false;
-	const char delimiter = 37;
 
 	//control connection socket startup
 	statusControl = getaddrinfo(SERVER_HOST_ADDRESS, controlPort, &hintsControl, &servinfoControl);
@@ -211,13 +212,12 @@ int main(int argc, char *argv[]){
 
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
 
-	
-	//NEED LOOP HERE TO HAVE SOCKET SERVER OPEN AND WAITING FOR MORE CONNECTIONS
+	//loop until SIGINT (ctrl-c) is received
 	while(1){
 		newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 		controlMsgRecd = ReceiveMessage(newSocketFDControl);
 		cout << "the received control message from the client is: " << controlMsgRecd << "\n";
-		isFileName = ParseMessage(controlMsgRecd, delimiter);
+		isFileName = ParseMessage(controlMsgRecd, DELIMITER, &command, &filename);
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
 		close(newSocketFDControl);
