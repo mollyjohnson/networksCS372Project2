@@ -205,7 +205,7 @@ int main(int argc, char *argv[]){
 	//while(1){
 	for (int i = 0; i < 2; i++){
 		messageReceived = ReceiveMessage(newSocketFDControl);
-		if(i == 1){
+		if(i == 0){
 			command = messageReceived;
 		}
 		else{
