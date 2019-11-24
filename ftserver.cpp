@@ -35,6 +35,7 @@ Last modified:
 #include <sys/ioctl.h>
 #include <stdbool.h>
 #include <arpa/inet.h>
+#include <bits/stdc++.h>
 
 //specify things used from std instead of using standard namespace
 using std::cout;
@@ -176,8 +177,41 @@ post-conditions:
 description:
 */
 bool ParseMessage(string controlMsgRecd, string delimiter, string *command, string *filename){
-	cout << "the delimiter is: " << delimiter << "\n";
-	return true;
+	vector <string> tokens;
+	stringstream check1(line);
+	string intermediateMessage;
+
+	while(getline(check1, intermediateMessage, delimiter)){
+		tokens.push_back(intermediateMessage);
+	}
+	if (tokens.size() == 1){
+		command = tokens[0];
+		cout << "the parsed command is: " << command << "\n";
+		filename = NONE;
+		cout << "the parsed filename is: " << filename << "\n";
+		return false;
+	}
+	if (tokens.size() > 1){
+		for (int i = 0; i < tokens.size(); i++){
+			if(i == 0){
+				command = tokens[i];
+			}	
+			if(i == 1){
+				filename = tokens[i];
+			}
+			else{
+				cout << "something went wrong, your vector has more than 2 split messages\n";
+			}
+		}
+		cout << "the parsed command is: " << command << "\n";
+		cout << "the parsed filename is: " << filename << "\n";
+		return true;
+	}
+	else{
+		cout << "something went wrong here, tokens vect size < 1\n";
+		return false;
+	}
+	
 }
 
 /*
@@ -220,6 +254,7 @@ int main(int argc, char *argv[]){
 		isFileName = ParseMessage(controlMsgRecd, delimiter, &command, &filename);
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
+		cout << "the result of isFileName bool is: " << isFileName << "\n";
 		close(newSocketFDControl);
 	}
 	freeaddrinfo(servinfoControl);
