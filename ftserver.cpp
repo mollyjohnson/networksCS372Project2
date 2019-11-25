@@ -236,6 +236,12 @@ int main(int argc, char *argv[]){
 	string command;
 	string filename;
 	bool isFileName = false;
+
+	//using a non-printable ascii control character as a delimiter to separate messages
+	//so that there's no chance of the delimiter being present in the command name, file
+	//name, or file contents (ascii 3 is "end of text" control character) 
+	//list of ascii control characters found from:
+	//https://www.ascii-code.com/
 	char delimiter = 3;
 
 	//control connection socket startup

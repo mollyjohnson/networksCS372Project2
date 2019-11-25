@@ -67,6 +67,12 @@ def main():
 	command = sys.argv[3]
 	filename = sys.argv[4]
 	dataPort = int(sys.argv[5])
+
+	#using a non-printable ascii control character as a delimiter to separate messages
+	#so that there's no chance of the delimiter being present in the command name, file
+	#name, or file contents (ascii 3 is "end of text" control character)
+	#list of ascii control characters found from:
+	#https://www.ascii-code.com/
 	delimiter = chr(3)
 	
 	controlMessage = (command + delimiter + filename + delimiter)
