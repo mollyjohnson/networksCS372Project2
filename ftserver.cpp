@@ -59,7 +59,7 @@ using std::basic_string;
 #define MIN_PORT 1025
 #define NUM_ARGS 2
 #define BACKLOG 20
-#define NONE "NONE"
+#define RECV_BUF_SIZE 1000
 
 /*
 pre-conditions:
@@ -158,11 +158,11 @@ description:
 */
 string ReceiveMessage(int newFD){
 	int charsR = -1;
-	char recvBuffer[500];
+	char recvBuffer[RECV_BUF_SIZE];
 	memset(recvBuffer, '\0', sizeof(recvBuffer));
 
 	//receive message of size max num of message chars plus max num handle chars minus 1
-	charsR = recv(newFD, recvBuffer, (500 - 1), 0);
+	charsR = recv(newFD, recvBuffer, (RECV_BUF_SIZE - 1), 0);
 	//check if the num of chars received is <0
 	if (charsR < 0){
 		fprintf(stderr, "Error reading from the socket.\n"); fflush(stdout); exit(1);
@@ -178,6 +178,8 @@ post-conditions:
 description:
 */
 bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command, string &filename){
+	//using stringstream and getline to get a vector of parsed strings separated by a delimiter character
+	//is adapted from: https://www.geeksforgeeks.org/tokenizing-a-string-cpp/
 	vector <string> tokens;
 	stringstream check1(controlMsgRecd);
 	string intermediate;
@@ -188,7 +190,7 @@ bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command,
 	cout << "the size of your tokens vector is: " << tokens.size() << "\n";
 	if (tokens.size() == 1){
 		command = tokens[0];
-		filename = NONE;
+		filename = "ERROR";
 		return false;
 	}
 	if (tokens.size() > 1){
