@@ -13,7 +13,8 @@
 from socket import *
 import sys
 
-NUM_ARGS = 6
+MAX_NUM_ARGS = 6
+MIN_NUM_ARGS = 5
 MAX_PORT = 65535
 MIN_PORT = 1025
 LIST_COMMAND = "-l"
@@ -24,11 +25,51 @@ CLIENT_HOST_ADDRESS = "flip2.engr.oregonstate.edu"
 #pre-conditions:
 #post-conditions:
 #description:
-def ArgCheck():
-	if (len(sys.argv) != NUM_ARGS):
-		print("Wrong number of arguments! Must enter server host, server port num, commmand, filename, and data port num. Start the program again.")
+def FiveArgAssignVars(delimiter):
+	controlPort = int(sys.argv[2])
+	serverHost = sys.argv[1]
+	command = sys.argv[3]
+	dataPort = int(sys.argv[4])
+	controlMessage = (command + delimiter)
+	return controlPort, serverHost, command, dataPort, controlMessage
+
+#pre-conditions:
+#post-conditions:
+#description:
+def SixArgAssignVars(delimiter):
+	controlPort = int(sys.argv[2])
+	serverHost = sys.argv[1]
+	command = sys.argv[3]
+	filename = sys.argv[4]
+	dataPort = int(sys.argv[5])
+	controlMessage = (command + delimiter + filename + delimiter)
+	return controlPort, serverHost, command, filename, dataPort, controlMessage
+
+#pre-conditions:
+#post-conditions:
+#description:
+def FiveArgCheck():
+	#if there's the right nuber of arguments, make sure the argument is a valid port number.
+	#using isdigit() to check if a string represents a non-negative integer adapted from:
+	#https://stackoverflow.com/questions/1265665/how-can-i-check-if-a-string-represents-an-int-without-using-try-except
+	if ((sys.argv[2].isdigit() == False) or (sys.argv[4].isdigit() == False)):
+		print("You entered a negative integer or string for a port number. Must enter a valid port number (1025-65535). Start the program again.")
 		exit()
-	#else if there's the right nuber of arguments, make sure the argument is a valid port number.
+	#if a non-neg integer was entered, check it's in valid port num range. valid port number range: 1025-65535
+	#valid port values excerpted from:
+	#https://www.webopedia.com/quick_ref/portnumbers.asp
+	if ((int(sys.argv[2]) > MAX_PORT) or (int(sys.argv[4]) > MAX_PORT) or (int(sys.argv[2]) < MIN_PORT) or (int(sys.argv[4]) < MIN_PORT)):
+		print("You entered a port number outside the valid port number range (1025-65535). Must enter a valid port number. Start the program again.")
+		exit()
+	if ((int(sys.argv[2])) == (int(sys.argv[4]))):
+		print("You entered the same port number for the control port and data port. This is not allowed. Start the program again.")
+		exit()
+
+#pre-conditions:
+#post-conditions:
+#description:
+def SixArgCheck():
+	#if there's the right nuber of arguments, make sure the argument is a valid port number.
 	#using isdigit() to check if a string represents a non-negative integer adapted from:
 	#https://stackoverflow.com/questions/1265665/how-can-i-check-if-a-string-represents-an-int-without-using-try-except
 	if ((sys.argv[2].isdigit() == False) or (sys.argv[5].isdigit() == False)):
@@ -43,9 +84,22 @@ def ArgCheck():
 	if ((int(sys.argv[2])) == (int(sys.argv[5]))):
 		print("You entered the same port number for the control port and data port. This is not allowed. Start the program again.")
 		exit()
+
+#pre-conditions:
+#post-conditions:
+#description:
+def ArgNumCheck():
+	if ((len(sys.argv) != MAX_NUM_ARGS) and (len(sys.argv) != MIN_NUM_ARGS)):
+		print("Wrong number of arguments! Must enter server host, server port num, commmand, filename (optional), and data port num. Start the program again.")
+		exit()
 	if(sys.argv[1] != SERVER_HOST_ADDRESS):
 		print("You didn't enter the correct server host address. Make sure to use " + SERVER_HOST_ADDRESS + " for the server host and start the program again.")
 		exit()
+	if (len(sys.argv) == MAX_NUM_ARGS):
+		SixArgCheck()
+	else:
+		FiveArgCheck()
+	return len(sys.argv)
 
 #pre-conditions:
 #post-conditions:
@@ -61,12 +115,7 @@ def InitiateContact(portNum, hostName):
 #description:
 def main():
 	#check num and validity of the command line args
-	ArgCheck()
-	controlPort = int(sys.argv[2])
-	serverHost = sys.argv[1]
-	command = sys.argv[3]
-	filename = sys.argv[4]
-	dataPort = int(sys.argv[5])
+	numArgs = ArgNumCheck()
 
 	#using a non-printable ascii control character as a delimiter to separate messages
 	#so that there's no chance of the delimiter being present in the command name, file
@@ -74,8 +123,11 @@ def main():
 	#list of ascii control characters found from:
 	#https://www.ascii-code.com/
 	delimiter = chr(3)
-	
-	controlMessage = (command + delimiter + filename + delimiter)
+
+	if numArgs == MAX_NUM_ARGS:
+		controlPort, serverHost, command, filename, dataPort, controlMessage = SixArgAssignVars(delimiter)	
+	else:
+		controlPort, serverHost, command, dataPort, controlMessage = FiveArgAssignVars(delimiter)
 
 	socketFDControl = InitiateContact(controlPort, serverHost)
 
