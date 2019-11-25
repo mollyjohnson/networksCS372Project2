@@ -236,7 +236,7 @@ int main(int argc, char *argv[]){
 	string command;
 	string filename;
 	bool isFileName = false;
-	char delimiter = '%';
+	char delimiter = 3;
 
 	//control connection socket startup
 	statusControl = getaddrinfo(SERVER_HOST_ADDRESS, controlPort, &hintsControl, &servinfoControl);
