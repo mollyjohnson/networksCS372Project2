@@ -321,6 +321,19 @@ int main(int argc, char *argv[]){
 			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
 			SendMessage(newSocketFDControl, errorMessage);
 		}
+		//else the command was good, either "-l" or "-g <FILENAME>"
+		else{
+
+
+			//if the command was "-g <FILENAME>"
+			if (isFile == true){
+
+			}
+			//if the command ws "-l"
+			else{
+
+			}
+		}
 		
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
