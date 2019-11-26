@@ -59,7 +59,7 @@ using std::basic_string;
 #define MIN_PORT 1025
 #define NUM_ARGS 2
 #define BACKLOG 20
-#define RECV_BUF_SIZE 1000
+#define MAX_MSG_SIZE 500
 
 /*
 pre-conditions:
@@ -172,7 +172,7 @@ description:
 void SendMessage(int sockFD, string message){
 	int charsW = -1;
 	//send message to server
-	char sendBuf[RECV_BUF_SIZE];
+	char sendBuf[MAX_MSG_SIZE];
 	memset(sendBuf, '\0', sizeof(sendBuf));
 	//copying a string to an array of chars adapted from:
 	//https://www.geeksforgeeks.org/convert-string-char-array-cpp/
@@ -206,11 +206,11 @@ description:
 */
 string ReceiveMessage(int newFD){
 	int charsR = -1;
-	char recvBuffer[RECV_BUF_SIZE];
+	char recvBuffer[MAX_MSG_SIZE];
 	memset(recvBuffer, '\0', sizeof(recvBuffer));
 
 	//receive message of size max num of message chars plus max num handle chars minus 1
-	charsR = recv(newFD, recvBuffer, (RECV_BUF_SIZE - 1), 0);
+	charsR = recv(newFD, recvBuffer, (MAX_MSG_SIZE - 1), 0);
 	//check if the num of chars received is <0
 	if (charsR < 0){
 		fprintf(stderr, "Error reading from the socket.\n"); fflush(stdout); exit(1);

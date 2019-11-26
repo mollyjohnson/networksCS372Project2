@@ -21,7 +21,7 @@ LIST_COMMAND = "-l"
 GET_COMMAND = "-g"
 SERVER_HOST_ADDRESS = "flip1.engr.oregonstate.edu"
 CLIENT_HOST_ADDRESS = "flip2.engr.oregonstate.edu"
-MAX_MESSAGE_SIZE = 1000
+MAX_MESSAGE_SIZE = 500
 
 #pre-conditions:
 #post-conditions:
@@ -108,7 +108,6 @@ def ArgNumCheck():
 def InitiateContact(portNum, hostName):
 	sockFD = socket(AF_INET, SOCK_STREAM)
 	sockFD.connect((hostName, portNum))
-
 	return sockFD
 
 #pre-conditions:
