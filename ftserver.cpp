@@ -249,10 +249,6 @@ bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command,
 		command = tokens[0];
 		filename = tokens[1];
 		dataPort = tokens[2];
-		else{
-			fprintf(stderr,"something went wrong, your control message vector has more than 2 split messages\n");
-			fflush(stdout); exit(1);
-		}
 		return true;
 	}
 	else{
