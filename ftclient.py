@@ -42,7 +42,7 @@ def SixArgAssignVars(delimiter):
 	serverHost = sys.argv[1]
 	command = sys.argv[3]
 	filename = sys.argv[4]
-	dataPort = int(sys.argv[5])
+	dataPort = str(sys.argv[5])
 	controlMessage = (command + delimiter + filename + delimiter + dataPort + delimiter)
 	return controlPort, serverHost, command, filename, dataPort, controlMessage
 
