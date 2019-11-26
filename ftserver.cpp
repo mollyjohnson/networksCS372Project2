@@ -66,7 +66,7 @@ pre-conditions:
 post-conditions:
 description:
 */
-bool CommandCheck(bool isFile, string command, &filename){
+bool CommandCheck(bool isFile, string command, string &filename){
 	if(isFile == true){
 		if(command == GET_COMMAND){
 			return true;
@@ -314,7 +314,7 @@ int main(int argc, char *argv[]){
 		isFile = ParseControlMessage(controlMsgRecd, delimiter, command, filename);
 
 		//check if the command was valid (either "-l" or "-g <FILENAME>")
-		goodCommand = CommandCheck(isFile, command);
+		goodCommand = CommandCheck(isFile, command, filename);
 
 		//if client sent an invalid command, i.e. not "-l" or "-g <FILENAME>"
 		if(goodCommand == false){
