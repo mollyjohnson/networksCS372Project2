@@ -190,7 +190,7 @@ bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command,
 	cout << "the size of your tokens vector is: " << tokens.size() << "\n";
 	if (tokens.size() == 1){
 		command = tokens[0];
-		filename = "ERROR";
+		//filename = "ERROR";
 		return false;
 	}
 	if (tokens.size() > 1){
@@ -235,7 +235,7 @@ int main(int argc, char *argv[]){
 	string controlMsgRecd;
 	string command;
 	string filename;
-	bool isFileName = false;
+	bool isFile = false;
 
 	//using a non-printable ascii control character as a delimiter to separate messages
 	//so that there's no chance of the delimiter being present in the command name, file
@@ -257,7 +257,7 @@ int main(int argc, char *argv[]){
 		newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 		controlMsgRecd = ReceiveMessage(newSocketFDControl);
 		cout << "the received control message from the client is: " << controlMsgRecd << "\n";
-		isFileName = ParseControlMessage(controlMsgRecd, delimiter, command, filename);
+		isFile = ParseControlMessage(controlMsgRecd, delimiter, command, filename);
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
 		cout << "the result of isFileName bool is: " << isFileName << "\n";
