@@ -238,7 +238,8 @@ bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command,
 	cout << "the size of your tokens vector is: " << tokens.size() << "\n";
 	if (tokens.size() == 1){
 		command = tokens[0];
-		//filename = "ERROR";
+		//clearing a string adapted from: http://www.cplusplus.com/reference/string/string/clear/
+		filename.clear();
 		return false;
 	}
 	if (tokens.size() > 1){
