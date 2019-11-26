@@ -133,8 +133,9 @@ def RecdCommandCheck(controlMessage):
 	errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n" 
 	if(controlMessage == errorMessage):
 		print(controlMessage, end = '')
-	else:
-		print("HEY THIS IS PYTHON CLIENT HERE, THERE WAS NO RECD ERROR, COMMAND VALID")
+		return False
+	print("HEY THIS IS PYTHON CLIENT HERE, THERE WAS NO RECD ERROR, COMMAND VALID")
+	return True
 
 #pre-conditions:
 #post-conditions:
@@ -159,7 +160,8 @@ def main():
 
 	SendMessage(socketFDControl, controlMessage)
 	controlMessage = ReceiveMessage(socketFDControl)
-	RecdCommandCheck(controlMessage)
+	isValidCommand = RecdCommandCheck(controlMessage)
+	print("the isValidCommand bool is: " + str(isValidCommand))
 
 	socketFDControl.close()
 
