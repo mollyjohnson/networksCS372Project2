@@ -132,7 +132,7 @@ def ReceiveMessage(sockFD):
 def RecdCommandCheck(controlMessage):
 	errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n" 
 	if(controlMessage == errorMessage):
-		print(controlMessage)
+		print(controlMessage, end = '')
 	else:
 		print("HEY THIS IS PYTHON CLIENT HERE, THERE WAS NO RECD ERROR, COMMAND VALID")
 

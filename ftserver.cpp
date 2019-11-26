@@ -174,7 +174,9 @@ void SendMessage(int sockFD, string message){
 	//send message to server
 	char sendBuf[RECV_BUF_SIZE];
 	memset(sendBuf, '\0', sizeof(sendBuf));
-	sendBuf = message;
+	//copying a string to an array of chars adapted from:
+	//https://www.geeksforgeeks.org/convert-string-char-array-cpp/
+	strcpy(sendBuf, message.c_str());
 	charsW = send(sockFD, sendBuf, strlen(sendBuf), 0);
 	//check that chars written is >0
 	if (charsW < 0){
