@@ -260,7 +260,7 @@ int main(int argc, char *argv[]){
 		isFile = ParseControlMessage(controlMsgRecd, delimiter, command, filename);
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
-		cout << "the result of isFileName bool is: " << isFileName << "\n";
+		cout << "the result of isFile bool is: " << isFile << "\n";
 		close(newSocketFDControl);
 	}
 	freeaddrinfo(servinfoControl);
