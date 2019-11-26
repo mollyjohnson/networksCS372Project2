@@ -65,6 +65,28 @@ using std::basic_string;
 pre-conditions:
 post-conditions:
 description:
+*/
+bool CommandCheck(bool isFile, string command){
+	if(isFile == true){
+		if(command == GET_COMMAND){
+			return true;
+		}	
+		return false;
+	}
+	//else if isfile is false, there's just a command from the client and no file
+	//check if the command is -l or not
+	else{
+		if(command == LIST_COMMAND){
+			return true;
+		}
+		return false;
+	}
+}
+
+/*
+pre-conditions:
+post-conditions:
+description:
 */  
 int IntInputValidation(string inputString){
 	//create variables for char to be checked, loop counter, and length of the input string
@@ -236,6 +258,7 @@ int main(int argc, char *argv[]){
 	string command;
 	string filename;
 	bool isFile = false;
+	bool goodCommand = false;
 
 	//using a non-printable ascii control character as a delimiter to separate messages
 	//so that there's no chance of the delimiter being present in the command name, file
@@ -257,10 +280,18 @@ int main(int argc, char *argv[]){
 		newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
 		controlMsgRecd = ReceiveMessage(newSocketFDControl);
 		cout << "the received control message from the client is: " << controlMsgRecd << "\n";
+
+		//check if there's a filename sent by the client or not
 		isFile = ParseControlMessage(controlMsgRecd, delimiter, command, filename);
+
+		//if isfile is true, means there's a command and a file sent from the client.
+		//check if the command is -g or not
+		goodCommand = CommandCheck(isFile, command);
+		
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
 		cout << "the result of isFile bool is: " << isFile << "\n";
+		cout << "the result of goodCommand bool is: " << goodCommand << "\n";
 		close(newSocketFDControl);
 	}
 	freeaddrinfo(servinfoControl);
