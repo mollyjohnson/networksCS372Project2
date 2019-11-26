@@ -228,7 +228,7 @@ pre-conditions:
 post-conditions:
 description:
 */
-bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command, string &filename){
+bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command, string &filename, string &dataPort){
 	//using stringstream and getline to get a vector of parsed strings separated by a delimiter character
 	//is adapted from: https://www.geeksforgeeks.org/tokenizing-a-string-cpp/
 	vector <string> tokens;
@@ -239,28 +239,24 @@ bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command,
 		tokens.push_back(intermediate);
 	}
 	cout << "the size of your tokens vector is: " << tokens.size() << "\n";
-	if (tokens.size() == 1){
+	if (tokens.size() == 2){
 		command = tokens[0];
+		dataPort = tokens[1];
 		filename.clear();
 		return false;
 	}
-	if (tokens.size() > 1){
-		for (int i = 0; i < tokens.size(); i++){
-			if(i == 0){
-				command = tokens[i];
-			}	
-			else if(i == 1){
-				filename = tokens[i];
-			}
-			else{
-				fprintf(stderr,"something went wrong, your control message vector has more than 2 split messages\n");
-				fflush(stdout); exit(1);
-			}
+	else if (tokens.size() == 3){
+		command = tokens[0];
+		filename = tokens[1];
+		dataPort = tokens[2];
+		else{
+			fprintf(stderr,"something went wrong, your control message vector has more than 2 split messages\n");
+			fflush(stdout); exit(1);
 		}
 		return true;
 	}
 	else{
-		fprintf(stderr,"something went wrong here, control message tokens vect size < 1\n");
+		fprintf(stderr,"something went wrong here, control message tokens vect size \n");
 		fflush(stdout); exit(1);
 	}
 }
@@ -288,6 +284,7 @@ int main(int argc, char *argv[]){
 	string filename;
 	bool isFile = false;
 	bool goodCommand = false;
+	string dataPortString;
 
 	//using a non-printable ascii control character as a delimiter to separate messages
 	//so that there's no chance of the delimiter being present in the command name, file
@@ -311,7 +308,10 @@ int main(int argc, char *argv[]){
 		cout << "the received control message from the client is: " << controlMsgRecd << "\n";
 
 		//check if there's a filename sent by the client or not
-		isFile = ParseControlMessage(controlMsgRecd, delimiter, command, filename);
+		isFile = ParseControlMessage(controlMsgRecd, delimiter, command, filename, dataPortString);
+
+		//const char dataPort here
+		char const *dataPort = dataPortString.c_str();
 
 		//check if the command was valid (either "-l" or "-g <FILENAME>")
 		goodCommand = CommandCheck(isFile, command, filename);
@@ -323,7 +323,8 @@ int main(int argc, char *argv[]){
 		}
 		//else the command was good, either "-l" or "-g <FILENAME>"
 		else{
-
+			//set up TCP data connection with ftclient
+			
 
 			//if the command was "-g <FILENAME>"
 			if (isFile == true){
@@ -337,6 +338,8 @@ int main(int argc, char *argv[]){
 		
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
+		cout << "the data port out of loop is: " << dataPortString << "\n";
+		cout << "the data port out of loop (const char) is: " << dataPort << "\n";
 		cout << "the result of isFile bool is: " << isFile << "\n";
 		cout << "the result of goodCommand bool is: " << goodCommand << "\n";
 		close(newSocketFDControl);

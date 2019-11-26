@@ -31,7 +31,7 @@ def FiveArgAssignVars(delimiter):
 	serverHost = sys.argv[1]
 	command = sys.argv[3]
 	dataPort = int(sys.argv[4])
-	controlMessage = (command + delimiter)
+	controlMessage = (command + delimiter + dataPort + delimiter)
 	return controlPort, serverHost, command, dataPort, controlMessage
 
 #pre-conditions:
@@ -43,7 +43,7 @@ def SixArgAssignVars(delimiter):
 	command = sys.argv[3]
 	filename = sys.argv[4]
 	dataPort = int(sys.argv[5])
-	controlMessage = (command + delimiter + filename + delimiter)
+	controlMessage = (command + delimiter + filename + delimiter + dataPort + delimiter)
 	return controlPort, serverHost, command, filename, dataPort, controlMessage
 
 #pre-conditions:
@@ -62,9 +62,9 @@ def FiveArgCheck():
 	if ((int(sys.argv[2]) > MAX_PORT) or (int(sys.argv[4]) > MAX_PORT) or (int(sys.argv[2]) < MIN_PORT) or (int(sys.argv[4]) < MIN_PORT)):
 		print("You entered a port number outside the valid port number range (1025-65535). Must enter a valid port number. Start the program again.")
 		exit()
-	if ((int(sys.argv[2])) == (int(sys.argv[4]))):
-		print("You entered the same port number for the control port and data port. This is not allowed. Start the program again.")
-		exit()
+	#if ((int(sys.argv[2])) == (int(sys.argv[4]))):
+	#	print("You entered the same port number for the control port and data port. This is not allowed. Start the program again.")
+	#	exit()
 
 #pre-conditions:
 #post-conditions:
@@ -82,9 +82,9 @@ def SixArgCheck():
 	if ((int(sys.argv[2]) > MAX_PORT) or (int(sys.argv[5]) > MAX_PORT) or (int(sys.argv[2]) < MIN_PORT) or (int(sys.argv[5]) < MIN_PORT)):
 		print("You entered a port number outside the valid port number range (1025-65535). Must enter a valid port number. Start the program again.")
 		exit()
-	if ((int(sys.argv[2])) == (int(sys.argv[5]))):
-		print("You entered the same port number for the control port and data port. This is not allowed. Start the program again.")
-		exit()
+	#if ((int(sys.argv[2])) == (int(sys.argv[5]))):
+	#	print("You entered the same port number for the control port and data port. This is not allowed. Start the program again.")
+	#	exit()
 
 #pre-conditions:
 #post-conditions:
