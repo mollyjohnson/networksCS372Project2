@@ -169,8 +169,32 @@ pre-conditions:
 post-conditions:
 description:
 */
-void SendMessage(int socketFD, string message){
+void SendMessage(int sockFD, string message){
+	int charsW = -1;
+	//send message to server
+	char sendBuf[RECV_BUF_SIZE];
+	memset(sendBuf, '\0', sizeof(sendBuf));
+	sendBuf = message;
+	charsW = send(sockFD, sendBuf, strlen(sendBuf), 0);
+	//check that chars written is >0
+	if (charsW < 0){
+		fprintf(stderr, "Error writing to socket.\n"); fflush(stdout); exit(1);
+	}
+	//check that chars written is >= the size of the string
+	if (charsW < strlen(sendBuf)){
+		fprintf(stderr, "Warning: some, but not all data written to socket.\n"); fflush(stdout); exit(1);
+	}
 
+	//use ioctl to check that all chars were sent. adapted from my own work in osu cs 344 winter 2019, created 3/3/19
+	int checkSend = -5;
+	do{
+		ioctl(sockFD, TIOCOUTQ, &checkSend);
+	} while(checkSend > 0);
+
+	//if checksend is <0, was an error
+	if (checkSend < 0){
+		fprintf(stderr, "Ioctl error.\n"); fflush(stdout); exit(1);
+	}
 }
 
 /*
@@ -287,6 +311,12 @@ int main(int argc, char *argv[]){
 		//if isfile is true, means there's a command and a file sent from the client.
 		//check if the command is -g or not
 		goodCommand = CommandCheck(isFile, command);
+
+		//if client sent an invalid command, i.e. not "-l" or "-g <FILENAME>"
+		if(goodCommand == false){
+			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
+			SendMessage(newSocketFDControl, errorMessage);
+		}
 		
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";

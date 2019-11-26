@@ -21,6 +21,7 @@ LIST_COMMAND = "-l"
 GET_COMMAND = "-g"
 SERVER_HOST_ADDRESS = "flip1.engr.oregonstate.edu"
 CLIENT_HOST_ADDRESS = "flip2.engr.oregonstate.edu"
+MAX_MESSAGE_SIZE = 1000
 
 #pre-conditions:
 #post-conditions:
@@ -113,6 +114,31 @@ def InitiateContact(portNum, hostName):
 #pre-conditions:
 #post-conditions:
 #description:
+def SendMessage(sockFD, message):
+	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
+	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
+	sockFD.send((message).encode())
+
+#pre-conditions:
+#post-conditions:
+#description:
+def ReceiveMessage(sockFD):
+	message = sockFD.recv(MAX_MESSAGE_SIZE).decode()
+	return message
+
+#pre-conditions:
+#post-conditions:
+#description:
+def RecdCommandCheck(controlMessage):
+	errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n" 
+	if(controlMessage == errorMessage):
+		print(controlMessage)
+	else:
+		print("HEY THIS IS PYTHON CLIENT HERE, THERE WAS NO RECD ERROR, COMMAND VALID")
+
+#pre-conditions:
+#post-conditions:
+#description:
 def main():
 	#check num and validity of the command line args
 	numArgs = ArgNumCheck()
@@ -131,7 +157,9 @@ def main():
 
 	socketFDControl = InitiateContact(controlPort, serverHost)
 
-	socketFDControl.send(controlMessage.encode())
+	SendMessage(socketFDControl, controlMessage)
+	controlMessage = ReceiveMessage(socketFDControl)
+	RecdCommandCheck(controlMessage)
 
 	socketFDControl.close()
 
