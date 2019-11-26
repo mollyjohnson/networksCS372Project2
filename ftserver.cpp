@@ -66,11 +66,14 @@ pre-conditions:
 post-conditions:
 description:
 */
-bool CommandCheck(bool isFile, string command){
+bool CommandCheck(bool isFile, string command, &filename){
 	if(isFile == true){
 		if(command == GET_COMMAND){
 			return true;
 		}	
+		//clear the filename string since the command was bad (i.e. wasn't "-g")
+		//clearing a string adapted from: http://www.cplusplus.com/reference/string/string/clear/
+		filename.clear();
 		return false;
 	}
 	//else if isfile is false, there's just a command from the client and no file
@@ -238,7 +241,6 @@ bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command,
 	cout << "the size of your tokens vector is: " << tokens.size() << "\n";
 	if (tokens.size() == 1){
 		command = tokens[0];
-		//clearing a string adapted from: http://www.cplusplus.com/reference/string/string/clear/
 		filename.clear();
 		return false;
 	}
@@ -311,8 +313,7 @@ int main(int argc, char *argv[]){
 		//check if there's a filename sent by the client or not
 		isFile = ParseControlMessage(controlMsgRecd, delimiter, command, filename);
 
-		//if isfile is true, means there's a command and a file sent from the client.
-		//check if the command is -g or not
+		//check if the command was valid (either "-l" or "-g <FILENAME>")
 		goodCommand = CommandCheck(isFile, command);
 
 		//if client sent an invalid command, i.e. not "-l" or "-g <FILENAME>"
