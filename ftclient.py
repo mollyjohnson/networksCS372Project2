@@ -30,7 +30,7 @@ def FiveArgAssignVars(delimiter):
 	controlPort = int(sys.argv[2])
 	serverHost = sys.argv[1]
 	command = sys.argv[3]
-	dataPort = int(sys.argv[4])
+	dataPort = str(sys.argv[4])
 	controlMessage = (command + delimiter + dataPort + delimiter)
 	return controlPort, serverHost, command, dataPort, controlMessage
 
