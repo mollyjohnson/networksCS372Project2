@@ -262,7 +262,7 @@ pre-conditions:
 post-conditions:
 description:
 */
-InitiateContact(struct addrinfo *servinfoData){
+int InitiateContact(struct addrinfo *servinfoData){
 	int sockFD = socket(servinfoData->ai_family, servinfoData->ai_socktype, servinfoData->ai_protocol);
 	if(sockFD < 0){
 		fprintf(stderr, "Error creating socket descriptor.\n"); fflush(stdout); exit(1);
@@ -279,7 +279,7 @@ pre-conditions:
 post-conditions:
 description:
 */
-SendMessageData(int socketFDData, string dataMessage){
+void SendMessageData(int socketFDData, string dataMessage){
 	int charsW = -1;
 	//send message to serjver
 	char sendBuf[MAX_MSG_SIZE];
@@ -382,10 +382,6 @@ int main(int argc, char *argv[]){
 			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
 			SendMessage(newSocketFDControl, errorMessage);
 		}
-		cout << "the command out of loop is: " << command << "\n";
-		cout << "the filename out of loop is: " << filename << "\n";
-		cout << "the result of isFile bool is: " << isFile << "\n";
-		cout << "the result of goodCommand bool is: " << goodCommand << "\n";
 		//else the command was good, either "-l" or "-g <FILENAME>"
 		else{
 			//set up TCP data connection with ftclient
@@ -406,6 +402,10 @@ int main(int argc, char *argv[]){
 
 			}
 		}
+		cout << "the command out of loop is: " << command << "\n";
+		cout << "the filename out of loop is: " << filename << "\n";
+		cout << "the result of isFile bool is: " << isFile << "\n";
+		cout << "the result of goodCommand bool is: " << goodCommand << "\n";
 		close(newSocketFDControl);
 	}
 	//freeaddrinfo(servinfoData);
