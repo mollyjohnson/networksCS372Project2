@@ -171,9 +171,9 @@ def main():
 		controlPort, serverHost, command, dataPort, controlMessage = FiveArgAssignVars(delimiter)
 
 	#create listening socket for data connection
-	socketFDData = SocketStartup(CLIENT_HOST_ADDRESS, dataPort)
+	socketFDData = SocketStartup(CLIENT_HOST_ADDRESS, int(dataPort))
 
-	socketFDControl = InitiateContact(controlPort, serverHost)
+	socketFDControl = InitiateContact(int(controlPort), serverHost)
 
 	SendMessage(socketFDControl, controlMessage)
 	controlMessage = ReceiveMessage(socketFDControl)
