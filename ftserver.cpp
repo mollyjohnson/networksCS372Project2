@@ -381,6 +381,7 @@ int main(int argc, char *argv[]){
 		if(goodCommand == false){
 			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
 			SendMessage(newSocketFDControl, errorMessage);
+			close(socketFDData);
 		}
 		//else the command was good, either "-l" or "-g <FILENAME>"
 		else{
