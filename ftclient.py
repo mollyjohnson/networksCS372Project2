@@ -139,6 +139,21 @@ def RecdCommandCheck(controlMessage):
 #pre-conditions:
 #post-conditions:
 #description:
+def SocketStartup(dataHostAddress, dataPort):
+	dataSocket = socket(AF_INET, SOCK_STREAM)
+	dataSocket.bind((dataHostAddress, dataPort))
+	dataSocket.listen(1)
+
+	return dataSocket
+
+def ReceiveMessageData(socketFDData):
+	connectionSocket, addr = socketFDData.accept()
+	message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
+	return connectionSocket, addr, message
+
+#pre-conditions:
+#post-conditions:
+#description:
 def main():
 	#check num and validity of the command line args
 	numArgs = ArgNumCheck()
@@ -156,7 +171,7 @@ def main():
 		controlPort, serverHost, command, dataPort, controlMessage = FiveArgAssignVars(delimiter)
 
 	#create listening socket for data connection
-	#socketFDData = SocketStartup(CLIENT_HOST_ADDRESS, )
+	socketFDData = SocketStartup(CLIENT_HOST_ADDRESS, dataPort)
 
 	socketFDControl = InitiateContact(controlPort, serverHost)
 
@@ -165,6 +180,10 @@ def main():
 	isValidCommand = RecdCommandCheck(controlMessage)
 	print("the isValidCommand bool is: " + str(isValidCommand))
 
+	connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData)
+	print(dataMessage)
+
+	connectionSocket.close()
 	socketFDControl.close()
 
 #used to call the main function
