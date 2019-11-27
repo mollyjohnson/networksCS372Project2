@@ -180,8 +180,9 @@ def main():
 	isValidCommand = RecdCommandCheck(controlMessage)
 	print("the isValidCommand bool is: " + str(isValidCommand))
 
-	connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData)
-	print(dataMessage)
+	if isValidCommand == True:
+		connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData)
+		print(dataMessage)
 
 	connectionSocket.close()
 	socketFDControl.close()

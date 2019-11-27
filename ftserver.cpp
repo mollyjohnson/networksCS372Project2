@@ -381,7 +381,7 @@ int main(int argc, char *argv[]){
 		if(goodCommand == false){
 			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
 			SendMessage(newSocketFDControl, errorMessage);
-			close(socketFDData);
+			//close(socketFDData);
 		}
 		//else the command was good, either "-l" or "-g <FILENAME>"
 		else{
@@ -391,7 +391,7 @@ int main(int argc, char *argv[]){
 				fprintf(stderr, "Error getting address info.\n"); fflush(stdout); exit(1);
 			}
 			socketFDData = InitiateContact(servinfoData);
-			string dataMessage = "hey it's ftserver here on the data connection\n"; 
+			string dataMessage = "hey it's ftserver here on the data connection"; 
 			SendMessageData(socketFDData, dataMessage);
 			close(socketFDData);
 			//if the command was "-g <FILENAME>"
