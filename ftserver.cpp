@@ -174,7 +174,7 @@ description:
 */
 void SendMessage(int sockFD, string message){
 	int charsW = -1;
-	//send message to server
+	//send message to serjver
 	char sendBuf[MAX_MSG_SIZE];
 	memset(sendBuf, '\0', sizeof(sendBuf));
 	//copying a string to an array of chars adapted from:
@@ -262,10 +262,64 @@ pre-conditions:
 post-conditions:
 description:
 */
+InitiateContact(struct addrinfo *servinfoData){
+	int sockFD = socket(servinfoData->ai_family, servinfoData->ai_socktype, servinfoData->ai_protocol);
+	if(sockFD < 0){
+		fprintf(stderr, "Error creating socket descriptor.\n"); fflush(stdout); exit(1);
+	}
+	int statusConnect = connect(sockFD, servinfoData->ai_addr, servinfoData->ai_addrlen);
+	if(statusConnect < 0){
+		fprintf(stderr, "Error connecting to server.\n"); fflush(stdout); exit(1);
+	}
+	return sockFD;
+}
+
+/*
+pre-conditions:
+post-conditions:
+description:
+*/
+SendMessageData(int socketFDData, string dataMessage){
+	int charsW = -1;
+	//send message to serjver
+	char sendBuf[MAX_MSG_SIZE];
+	memset(sendBuf, '\0', sizeof(sendBuf));
+	//copying a string to an array of chars adapted from:
+	//https://www.geeksforgeeks.org/convert-string-char-array-cpp/
+	strcpy(sendBuf, dataMessage.c_str());
+	charsW = send(socketFDData, sendBuf, strlen(sendBuf), 0);
+	//check that chars written is >0
+	if (charsW < 0){
+		fprintf(stderr, "Error writing to socket.\n"); fflush(stdout); exit(1);
+	}
+	//check that chars written is >= the size of the string
+	if (charsW < strlen(sendBuf)){
+		fprintf(stderr, "Warning: some, but not all data written to socket.\n"); fflush(stdout); exit(1);
+	}
+
+	//use ioctl to check that all chars were sent. adapted from my own work in osu cs 344 winter 2019, created 3/3/19
+	int checkSend = -5;
+	do{
+		ioctl(socketFDData, TIOCOUTQ, &checkSend);
+	} while(checkSend > 0);
+
+	//if checksend is <0, was an error
+	if (checkSend < 0){
+		fprintf(stderr, "Ioctl error.\n"); fflush(stdout); exit(1);
+	}
+}
+
+
+/*
+pre-conditions:
+post-conditions:
+description:
+*/
 int main(int argc, char *argv[]){
 	ArgCheck(argc, argv);	
 	char const *controlPort = argv[1];
 
+	//control socket setup info
 	int statusControl, socketFDControl, newSocketFDControl;
 	struct addrinfo hintsControl;
 	struct addrinfo *servinfoControl;
@@ -281,6 +335,15 @@ int main(int argc, char *argv[]){
 	bool isFile = false;
 	bool goodCommand = false;
 	string dataPortString;
+
+	//data socket setup info
+	int statusData, socketFDData, newSocketFDData;
+	struct addrinfo hintsData;
+	struct addrinfo *servinfoData;
+	memset(&hintsData, 0, sizeof(hintsData));
+	hintsData.ai_family = AF_UNSPEC;
+	hintsData.ai_socktype = SOCK_STREAM;
+	hintsData.ai_flags = AI_PASSIVE;
 
 	//using a non-printable ascii control character as a delimiter to separate messages
 	//so that there's no chance of the delimiter being present in the command name, file
@@ -308,6 +371,8 @@ int main(int argc, char *argv[]){
 
 		//const char dataPort here
 		char const *dataPort = dataPortString.c_str();
+		cout << "the data port out of loop is: " << dataPortString << "\n";
+		cout << "the data port out of loop (const char) is: " << dataPort << "\n";
 
 		//check if the command was valid (either "-l" or "-g <FILENAME>")
 		goodCommand = CommandCheck(isFile, command, filename);
@@ -317,11 +382,21 @@ int main(int argc, char *argv[]){
 			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
 			SendMessage(newSocketFDControl, errorMessage);
 		}
+		cout << "the command out of loop is: " << command << "\n";
+		cout << "the filename out of loop is: " << filename << "\n";
+		cout << "the result of isFile bool is: " << isFile << "\n";
+		cout << "the result of goodCommand bool is: " << goodCommand << "\n";
 		//else the command was good, either "-l" or "-g <FILENAME>"
 		else{
 			//set up TCP data connection with ftclient
-			
-
+			statusData = getaddrinfo(CLIENT_HOST_ADDRESS, dataPort, &hintsData, &servinfoData);	
+			if(statusData < 0){
+				fprintf(stderr, "Error getting address info.\n"); fflush(stdout); exit(1);
+			}
+			socketFDData = InitiateContact(servinfoData);
+			string dataMessage = "hey it's ftserver here on the data connection\n"; 
+			SendMessageData(socketFDData, dataMessage);
+			close(socketFDData);
 			//if the command was "-g <FILENAME>"
 			if (isFile == true){
 
@@ -331,15 +406,9 @@ int main(int argc, char *argv[]){
 
 			}
 		}
-		
-		cout << "the command out of loop is: " << command << "\n";
-		cout << "the filename out of loop is: " << filename << "\n";
-		cout << "the data port out of loop is: " << dataPortString << "\n";
-		cout << "the data port out of loop (const char) is: " << dataPort << "\n";
-		cout << "the result of isFile bool is: " << isFile << "\n";
-		cout << "the result of goodCommand bool is: " << goodCommand << "\n";
 		close(newSocketFDControl);
 	}
+	//freeaddrinfo(servinfoData);
 	freeaddrinfo(servinfoControl);
 
 	return 0;
