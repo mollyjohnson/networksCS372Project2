@@ -183,8 +183,8 @@ def main():
 	if isValidCommand == True:
 		connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData)
 		print(dataMessage)
+		connectionSocket.close()
 
-	connectionSocket.close()
 	socketFDControl.close()
 
 #used to call the main function
