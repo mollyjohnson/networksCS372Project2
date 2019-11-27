@@ -30,8 +30,8 @@ def FiveArgAssignVars(delimiter):
 	controlPort = int(sys.argv[2])
 	serverHost = sys.argv[1]
 	command = sys.argv[3]
-	dataPort = str(sys.argv[4])
-	controlMessage = (command + delimiter + dataPort + delimiter)
+	dataPort = int(sys.argv[4])
+	controlMessage = (command + delimiter + str(dataPort) + delimiter)
 	return controlPort, serverHost, command, dataPort, controlMessage
 
 #pre-conditions:
@@ -154,6 +154,9 @@ def main():
 		controlPort, serverHost, command, filename, dataPort, controlMessage = SixArgAssignVars(delimiter)	
 	else:
 		controlPort, serverHost, command, dataPort, controlMessage = FiveArgAssignVars(delimiter)
+
+	#create listening socket for data connection
+	#socketFDData = SocketStartup(CLIENT_HOST_ADDRESS, )
 
 	socketFDControl = InitiateContact(controlPort, serverHost)
 
