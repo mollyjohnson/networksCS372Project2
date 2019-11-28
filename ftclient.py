@@ -133,7 +133,6 @@ def RecdCommandCheck(controlMessage):
 	if(controlMessage == errorMessage):
 		print(controlMessage, end = '')
 		return False
-	print("HEY THIS IS PYTHON CLIENT HERE, THERE WAS NO RECD ERROR, COMMAND VALID")
 	return True
 
 #pre-conditions:
@@ -165,13 +164,15 @@ def ReceiveMessageData(socketFDData, delimiter):
 #pre-conditions:
 #post-conditions:
 #description:
-def FileNameCheck(controlMessage):
+def FileNameFound(controlMessage):
+	print("the control message is:" + controlMessage)
 	errorMessage = "File not found.\n"
 	if(controlMessage == errorMessage):
 		print(controlMessage, end = '')
 		return False
-	print("file was found.\n")
-	return True
+	else:
+		print("file was found.\n")
+		return True
 
 #pre-conditions:
 #post-conditions:
@@ -201,9 +202,11 @@ def main():
 	controlMessage = ReceiveMessage(socketFDControl)
 	isValidCommand = RecdCommandCheck(controlMessage)
 
-	isValidFile = FileNameCheck(controlMessage)
+	if ((isValidCommand == True) and (command == GET_COMMAND)): 
+		isValidFile = FileNameFound(controlMessage)
 
 	print("the isValidCommand bool is: " + str(isValidCommand))
+	print("the isValidFile bool is: " + str(isValidFile))
 
 	#check if the command was valid
 	if isValidCommand == True:

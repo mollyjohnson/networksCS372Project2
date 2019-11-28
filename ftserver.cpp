@@ -375,6 +375,7 @@ int main(int argc, char *argv[]){
 	bool goodCommand = false;
 	string dataPortString;
 	vector<string> directoryContents;
+	bool fileFound = false;
 
 	//data socket setup info
 	int statusData, socketFDData, newSocketFDData;
@@ -422,17 +423,24 @@ int main(int argc, char *argv[]){
 			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
 			SendMessage(newSocketFDControl, errorMessage);
 		}
-		else if(isFile == true){
+		else if((isFile == true) && (command == GET_COMMAND)){
 			GetDirectoryContents(directoryContents);
 			int foundFileCount = 0;
 			for(int k = 0; k < directoryContents.size(); k++){
+				cout << "directory contents number " << k << " is: " << directoryContents[k] << "\n";
 				if(directoryContents[k] == filename){
 					foundFileCount++;
+					cout << "file found count is: " << foundFileCount << "\n";
 				}	
 			}	
+			cout << "final file found count out of the loop is: " << foundFileCount << "\n";
 			if(foundFileCount == 0){
 				string errorMessage = "File not found.\n";
 				SendMessage(newSocketFDControl, errorMessage);
+				fileFound = false;
+			}
+			else{
+				fileFound = true;
 			}
 			//erasing a vector so it's empty again excerpted from:
 			//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
@@ -452,7 +460,7 @@ int main(int argc, char *argv[]){
 			socketFDData = InitiateContact(servinfoData);
 
 			//if the command was "-g <FILENAME>"
-			if (isFile == true){
+			if (fileFound == true){
 
 			}
 			//if the command ws "-l"
