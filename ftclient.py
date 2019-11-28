@@ -146,11 +146,12 @@ def SocketStartup(dataHostAddress, dataPort):
 
 	return dataSocket
 
-def ReceiveMessageData(socketFDData):
+def ReceiveMessageData(socketFDData, delimiter):
 	connectionSocket, addr = socketFDData.accept()
 	dataVect = []
-	message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
-	dataVect.append(message)
+	while(delimiter not in dataVect):
+		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
+		dataVect.append(message)
 	return connectionSocket, addr, dataVect
 
 #pre-conditions:
@@ -183,11 +184,11 @@ def main():
 	print("the isValidCommand bool is: " + str(isValidCommand))
 
 	if isValidCommand == True:
-		connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData)
+		connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData, delimiter)
 		print("THE DATA RECEIVED IS:")
 		#print(dataMessage)
-		for item in dataMessage:
-			print(item)
+		for object in dataMessage:
+			print(object)
 		connectionSocket.close()
 
 	socketFDControl.close()
