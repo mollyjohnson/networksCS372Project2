@@ -165,6 +165,17 @@ def ReceiveMessageData(socketFDData, delimiter):
 #pre-conditions:
 #post-conditions:
 #description:
+def FileNameCheck(controlMessage):
+	errorMessage = "File not found.\n"
+	if(controlMessage == errorMessage):
+		print(controlMessage, end = '')
+		return False
+	print("file was found.\n")
+	return True
+
+#pre-conditions:
+#post-conditions:
+#description:
 def main():
 	#check num and validity of the command line args
 	numArgs = ArgNumCheck()
@@ -189,6 +200,9 @@ def main():
 	SendMessage(socketFDControl, controlMessage)
 	controlMessage = ReceiveMessage(socketFDControl)
 	isValidCommand = RecdCommandCheck(controlMessage)
+
+	isValidFile = FileNameCheck(controlMessage)
+
 	print("the isValidCommand bool is: " + str(isValidCommand))
 
 	#check if the command was valid
@@ -205,6 +219,8 @@ def main():
 				print(object)
 			#close data connection socket
 			connectionSocket.close()
+		#elif((isValidFile == True) and (command == GET_COMMAND)):
+
 
 	#close the control socket
 	socketFDControl.close()

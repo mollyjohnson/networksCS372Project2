@@ -422,6 +422,24 @@ int main(int argc, char *argv[]){
 			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
 			SendMessage(newSocketFDControl, errorMessage);
 		}
+		else if(isFile == true){
+			GetDirectoryContents(directoryContents);
+			int foundFileCount = 0;
+			for(int k = 0; k < directoryContents.size(); k++){
+				if(directoryContents[k] == filename){
+					foundFileCount++;
+				}	
+			}	
+			if(foundFileCount == 0){
+				string errorMessage = "File not found.\n";
+				SendMessage(newSocketFDControl, errorMessage);
+			}
+			//erasing a vector so it's empty again excerpted from:
+			//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
+			//http://www.cplusplus.com/reference/vector/vector/erase/
+			directoryContents.erase(directoryContents.begin(), directoryContents.end());
+
+		}
 		//else the command was good, either "-l" or "-g <FILENAME>"
 		else{
 			//set up TCP data connection with ftclient (ftclient is server in this case so use their host address,
@@ -452,7 +470,6 @@ int main(int argc, char *argv[]){
 					}
 					//if the last one of the messages being sent, append special delimiter char instead of a newline
 					else{
-						
 						SendMessage(socketFDData, (directoryContents[k] + delimiter));
 					}
 				}
