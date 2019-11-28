@@ -445,8 +445,9 @@ int main(int argc, char *argv[]){
 					}
 				}
 				//erasing a vector so it's empty again excerpted from:
-				//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/
-				directoryContents.erase();
+				//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
+				//http://www.cplusplus.com/reference/vector/vector/erase/
+				directoryContents.erase(directoryContents.begin(), directoryContents.end());
 			}
 			close(socketFDData);
 		}
