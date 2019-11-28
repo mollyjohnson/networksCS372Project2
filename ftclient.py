@@ -156,10 +156,7 @@ def ReceiveMessageData(socketFDData, delimiter):
 	while(delimiter not in message):
 		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
 		if(delimiter in message):
-			print("delimiter was in the message this loop.")
-			print("message length with delimiter is: " + str(len(message)))
 			messageNoDelim = (message.replace(delimiter, ''))
-			print("message length with no delimiter is: " + str(len(messageNoDelim)))
 			dataArray.append(messageNoDelim)
 		else:
 			dataArray.append(message)
