@@ -326,7 +326,7 @@ string GetDirectoryContents(){
 	}
 
 	printf("cur working directory is: %s\n", cwd);
-	dir = opendir(cwd.c_str());
+	dir = opendir(cwd);
 	if(dir != NULL){
 		while((directory = readdir(dir)) != NULL){
 			printf("%s\n", directory->d_name);
