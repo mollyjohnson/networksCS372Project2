@@ -184,10 +184,9 @@ def main():
 		if(command == LIST_COMMAND):
 			connectionSocket, addr, dataMessage = ReceiveDirContents(socketFDData)
 			print(dataMessage)
+			connectionSocket.close()
 		else:
 			print("you entered -g <filename>")
-
-		connectionSocket.close()
 
 	socketFDControl.close()
 
