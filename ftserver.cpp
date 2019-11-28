@@ -441,7 +441,7 @@ int main(int argc, char *argv[]){
 					//if the last one of the packets being sent
 					else{
 						
-						SendMessage(socketFDData, (directoryContents[k] + delimiter));
+						SendMessage(socketFDData, (directoryContents[k]));
 					}
 				}
 			}

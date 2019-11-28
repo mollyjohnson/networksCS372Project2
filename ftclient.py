@@ -146,17 +146,10 @@ def SocketStartup(dataHostAddress, dataPort):
 
 	return dataSocket
 
-def ReceiveMessageData(socketFDData, delimiter):
+def ReceiveDirContents(socketFDData):
 	connectionSocket, addr = socketFDData.accept()
-	dataVect = []
-	message = ""
-	x = 0
-	while(delimiter not in message):
-		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
-		dataVect.append(message)
-		print("loop in receivemessagedata is: " + str(x))
-		x = x + 1
-	return connectionSocket, addr, dataVect
+	message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
+	return connectionSocket, addr, message
 
 #pre-conditions:
 #post-conditions:
@@ -189,15 +182,12 @@ def main():
 
 	if isValidCommand == True:
 		if(command == LIST_COMMAND):
-			connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData, delimiter)
-			print("THE DATA RECEIVED IS:")
-			#print(dataMessage)
-			x = 0
-			for object in dataMessage:
-				print(object)
-				print("loop is: " + str(x))
-				x = x + 1
-			connectionSocket.close()
+			connectionSocket, addr, dataMessage = ReceiveDirContents(socketFDData)
+			print(dataMessage)
+		else:
+			print("you entered -g <filename>")
+
+		connectionSocket.close()
 
 	socketFDControl.close()
 
