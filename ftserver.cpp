@@ -320,7 +320,13 @@ string GetDirectoryContents(){
 	memset(cwd, '\0', sizeof(cwd));
 	DIR *dir;
 	struct dirent *directory;
-	if(dir = opendir(getcwd(cwd, sizeof(cwd))) != NULL){
+	if(!getcwd(cwd, sizeof(cwd))){
+		printf("couldn't get current working directory.\n");
+	}
+
+	printf("cur working directory is: %s\n", cwd);
+	dir = opendir(cwd);
+	if(dir != NULL){
 		while((directory = readdir(dir)) != NULL){
 			printf("%s\n", directory->d_name);
 		}
