@@ -155,6 +155,8 @@ def ReceiveMessageData(socketFDData, delimiter):
 	while(delimiter not in message):
 		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
 		if(delimiter in message):
+			#removing a char from a string adapted from:
+			#https://www.journaldev.com/23674/python-remove-character-from-string
 			messageNoDelim = (message.replace(delimiter, ''))
 			dataArray.append(messageNoDelim)
 		else:
