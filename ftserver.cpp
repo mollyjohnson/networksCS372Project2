@@ -316,16 +316,18 @@ description:
 */
 string GetDirectoryContents(){
 	string directoryContents;
-	char cwd[MAX_MSG_SIZE];
-	memset(cwd, '\0', sizeof(cwd));
+	//char cwd[MAX_MSG_SIZE];
+	//memset(cwd, '\0', sizeof(cwd));
+	string cwd;
+
 	DIR *dir;
 	struct dirent *directory;
-	if(!getcwd(cwd, sizeof(cwd))){
+	if(!getcwd(cwd.c_str(), sizeof(cwd.c_str()))){
 		printf("couldn't get current working directory.\n");
 	}
 
 	printf("cur working directory is: %s\n", cwd);
-	dir = opendir(cwd);
+	dir = opendir(cwd.c_str());
 	if(dir != NULL){
 		while((directory = readdir(dir)) != NULL){
 			printf("%s\n", directory->d_name);
