@@ -150,9 +150,12 @@ def ReceiveMessageData(socketFDData, delimiter):
 	connectionSocket, addr = socketFDData.accept()
 	dataVect = []
 	message = ""
+	x = 0
 	while(delimiter not in message):
 		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
 		dataVect.append(message)
+		print("loop in receivemessagedata is: " + str(x))
+		x = x + 1
 	return connectionSocket, addr, dataVect
 
 #pre-conditions:
