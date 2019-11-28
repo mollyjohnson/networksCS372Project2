@@ -326,9 +326,11 @@ void GetDirectoryContents(vector<string> &directoryContents){
 
 	printf("cur working directory is: %s\n", cwd);
 	dir = opendir(cwd);
+	int i = 0;
 	if(dir != NULL){
 		while((directory = readdir(dir)) != NULL){
-			printf("%s\n", directory->d_name);
+			//printf("%s\n", directory->d_name);
+			directoryContents.push_back(directory->d_name);
 		}
 		closedir(dir);
 	}
@@ -428,6 +430,10 @@ int main(int argc, char *argv[]){
 			//if the command ws "-l"
 			else{
 				GetDirectoryContents(directoryContents);
+				cout << "directory contents:\n";
+				for(int k = 0; k < directoryContents.size(); k++){
+					cout << directoryContents[k] << "\n";
+				}
 			}
 		}
 		cout << "the command out of loop is: " << command << "\n";
