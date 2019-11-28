@@ -182,6 +182,7 @@ def main():
 
 	if isValidCommand == True:
 		connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData)
+		print("THE DATA RECEIVED IS:")
 		print(dataMessage)
 		connectionSocket.close()
 
