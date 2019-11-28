@@ -188,8 +188,11 @@ def main():
 		connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData, delimiter)
 		print("THE DATA RECEIVED IS:")
 		#print(dataMessage)
+		x = 0
 		for object in dataMessage:
 			print(object)
+			print("loop is: " + str(x))
+			x = x + 1
 		connectionSocket.close()
 
 	socketFDControl.close()
