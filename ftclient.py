@@ -149,7 +149,8 @@ def SocketStartup(dataHostAddress, dataPort):
 def ReceiveMessageData(socketFDData, delimiter):
 	connectionSocket, addr = socketFDData.accept()
 	dataVect = []
-	while(delimiter not in dataVect):
+	message = ""
+	while(delimiter not in message):
 		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
 		dataVect.append(message)
 	return connectionSocket, addr, dataVect
