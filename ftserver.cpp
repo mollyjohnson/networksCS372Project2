@@ -318,22 +318,32 @@ void GetDirectoryContents(vector<string> &directoryContents){
 	char cwd[MAX_MSG_SIZE];
 	memset(cwd, '\0', sizeof(cwd));
 
-	DIR *dir;
-	struct dirent *directory;
-	if(!getcwd(cwd, sizeof(cwd))){
-		printf("couldn't get current working directory.\n");
+	//getting contents of current working directory adapted from:
+	//https://stackoverflow.com/questions/298510/how-to-get-the-current-directory-in-a-c-program
+	if(getcwd(cwd, sizeof(cwd)) == NULL){
+		fprintf(stderr, "couldn't get current working directory.\n"); fflush(stdout); exit(1);
 	}
 
-	printf("cur working directory is: %s\n", cwd);
+	//using DIR and struct dirent to open and get the file names in a directory adapted from:
+	//http://www.martinbroadhurst.com/list-the-files-in-a-directory-in-c.html
+	//create DIR file descriptor
+	DIR *dir;
+	//create directory struct
+	struct dirent *directory;
+	//open the current working directory
 	dir = opendir(cwd);
-	int i = 0;
+	//if the directory opened successfully (dir would == NULL if unable to open)
 	if(dir != NULL){
+		//read contents of the directory for as long as the contents don't == NULL
 		while((directory = readdir(dir)) != NULL){
-			//printf("%s\n", directory->d_name);
+			//for each item of content in the directory, add that file name to the 
+			//directory contents vector
 			directoryContents.push_back(directory->d_name);
 		}
+		//close the directory
 		closedir(dir);
 	}
+	//else if the directory couldn't be open, print error message
 	else{
 		fprintf(stderr, "Error, could not open directry\n"); fflush(stdout); exit(1);
 	}
@@ -414,31 +424,33 @@ int main(int argc, char *argv[]){
 		}
 		//else the command was good, either "-l" or "-g <FILENAME>"
 		else{
-			//set up TCP data connection with ftclient
+			//set up TCP data connection with ftclient (ftclient is server in this case so use their host address,
+			//and the port should be the data port not the control port)
 			statusData = getaddrinfo(CLIENT_HOST_ADDRESS, dataPort, &hintsData, &servinfoData);	
 			if(statusData < 0){
 				fprintf(stderr, "Error getting address info.\n"); fflush(stdout); exit(1);
 			}
+			//initiate contact w ftclient (ftclient now acting as a server) over the data connection
 			socketFDData = InitiateContact(servinfoData);
-			//string dataMessage = "hey it's ftserver here on the data connection"; 
-			//SendMessageData(socketFDData, dataMessage);
+
 			//if the command was "-g <FILENAME>"
 			if (isFile == true){
 
 			}
 			//if the command ws "-l"
 			else{
+				//retrieve directory contents and put them into the directory contents vector
 				GetDirectoryContents(directoryContents);
-				/*
+				
+				//send each item in the directory contents vector, adding a newline char to each item
+				//unless it's the last item in the directory contents vector, in which case add the
+				//special delimiter char so ftclient knows the end of the data sent has been reached
 				for(int k = 0; k < directoryContents.size(); k++){
-					cout << directoryContents[k] << "\n";
-				}
-				*/
-				for(int k = 0; k < directoryContents.size(); k++){
+					//if not the last item in the vector, add newline char and send to ftclient
 					if(k != directoryContents.size() - 1){
 						SendMessage(socketFDData, (directoryContents[k] + "\n"));
 					}
-					//if the last one of the packets being sent
+					//if the last one of the messages being sent, append special delimiter char instead of a newline
 					else{
 						
 						SendMessage(socketFDData, (directoryContents[k] + delimiter));
@@ -449,6 +461,7 @@ int main(int argc, char *argv[]){
 				//http://www.cplusplus.com/reference/vector/vector/erase/
 				directoryContents.erase(directoryContents.begin(), directoryContents.end());
 			}
+			//close the data socket
 			close(socketFDData);
 		}
 		/*

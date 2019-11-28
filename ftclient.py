@@ -148,15 +148,15 @@ def SocketStartup(dataHostAddress, dataPort):
 
 def ReceiveMessageData(socketFDData, delimiter):
 	connectionSocket, addr = socketFDData.accept()
-	dataVect = []
+
+	#creating a dynamic array in python adapted from:
+	#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
+	dataArray = []
 	message = ""
-	x = 0
 	while(delimiter not in message):
 		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
-		dataVect.append(message)
-		print("loop in receivemessagedata is: " + str(x))
-		x = x + 1
-	return connectionSocket, addr, dataVect
+		dataArray.append(message)
+	return connectionSocket, addr, dataArray
 
 #pre-conditions:
 #post-conditions:
@@ -187,18 +187,22 @@ def main():
 	isValidCommand = RecdCommandCheck(controlMessage)
 	print("the isValidCommand bool is: " + str(isValidCommand))
 
+	#check if the command was valid
 	if isValidCommand == True:
+		#if command was "-l", receive the directory contents sent from ftserver
 		if(command == LIST_COMMAND):
+			#accept connection and receive directory contents data from ftserver
 			connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData, delimiter)
-			print("THE DATA RECEIVED IS:")
-			#print(dataMessage)
-			x = 0
+
+			#print each item in the dataMessage dynamic array
+			#for <item> in <array> loop use adapted from:
+			#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
 			for object in dataMessage:
 				print(object)
-				print("loop is: " + str(x))
-				x = x + 1
+			#close data connection socket
 			connectionSocket.close()
 
+	#close the control socket
 	socketFDControl.close()
 
 #used to call the main function
