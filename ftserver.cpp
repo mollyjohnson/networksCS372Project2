@@ -309,6 +309,24 @@ void SendMessageData(int socketFDData, string dataMessage){
 	}
 }
 
+/*
+pre-conditions:
+post-conditions:
+description:
+*/
+void GetDirectoryContents(){
+	DIR *dir;
+	struct dirent *directory;
+	if((dir = opendir(getenv())) != NULL){
+		while((directory = readdir(dir)) != NULL){
+			printf("%s\n", directory->d_name);
+		}
+		closedir(dir);
+	}
+	else{
+		fprintf(stderr, "Error, could not open directry\n"); fflush(stdout); exit(1);
+	}
+}
 
 /*
 pre-conditions:
@@ -381,7 +399,6 @@ int main(int argc, char *argv[]){
 		if(goodCommand == false){
 			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
 			SendMessage(newSocketFDControl, errorMessage);
-			//close(socketFDData);
 		}
 		//else the command was good, either "-l" or "-g <FILENAME>"
 		else{
