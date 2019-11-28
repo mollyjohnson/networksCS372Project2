@@ -148,8 +148,10 @@ def SocketStartup(dataHostAddress, dataPort):
 
 def ReceiveMessageData(socketFDData):
 	connectionSocket, addr = socketFDData.accept()
+	dataVect = []
 	message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
-	return connectionSocket, addr, message
+	dataVect.append(message)
+	return connectionSocket, addr, dataVect
 
 #pre-conditions:
 #post-conditions:
@@ -183,7 +185,9 @@ def main():
 	if isValidCommand == True:
 		connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData)
 		print("THE DATA RECEIVED IS:")
-		print(dataMessage)
+		#print(dataMessage)
+		for item in dataMessage:
+			print(item)
 		connectionSocket.close()
 
 	socketFDControl.close()
