@@ -317,7 +317,7 @@ description:
 void GetDirectoryContents(){
 	DIR *dir;
 	struct dirent *directory;
-	if((dir = opendir(getenv())) != NULL){
+	if(dir = opendir() != NULL){
 		while((directory = readdir(dir)) != NULL){
 			printf("%s\n", directory->d_name);
 		}
