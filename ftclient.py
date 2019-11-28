@@ -187,6 +187,7 @@ def main():
 	#list of ascii control characters found from:
 	#https://www.ascii-code.com/
 	delimiter = chr(3)
+	isValidFile = False
 
 	if numArgs == MAX_NUM_ARGS:
 		controlPort, serverHost, command, filename, dataPort, controlMessage = SixArgAssignVars(delimiter)	
