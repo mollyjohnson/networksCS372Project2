@@ -185,15 +185,16 @@ def main():
 	print("the isValidCommand bool is: " + str(isValidCommand))
 
 	if isValidCommand == True:
-		connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData, delimiter)
-		print("THE DATA RECEIVED IS:")
-		#print(dataMessage)
-		x = 0
-		for object in dataMessage:
-			print(object)
-			print("loop is: " + str(x))
-			x = x + 1
-		connectionSocket.close()
+		if(command == LIST_COMMAND):
+			connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData, delimiter)
+			print("THE DATA RECEIVED IS:")
+			#print(dataMessage)
+			x = 0
+			for object in dataMessage:
+				print(object)
+				print("loop is: " + str(x))
+				x = x + 1
+			connectionSocket.close()
 
 	socketFDControl.close()
 
