@@ -314,8 +314,7 @@ pre-conditions:
 post-conditions:
 description:
 */
-string GetDirectoryContents(){
-	string directoryContents;
+void GetDirectoryContents(vector<string> &directoryContents){
 	char cwd[MAX_MSG_SIZE];
 	memset(cwd, '\0', sizeof(cwd));
 
@@ -336,7 +335,6 @@ string GetDirectoryContents(){
 	else{
 		fprintf(stderr, "Error, could not open directry\n"); fflush(stdout); exit(1);
 	}
-	return directoryContents;
 }
 
 /*
@@ -364,7 +362,7 @@ int main(int argc, char *argv[]){
 	bool isFile = false;
 	bool goodCommand = false;
 	string dataPortString;
-	string directoryContents;
+	vector<string> directoryContents;
 
 	//data socket setup info
 	int statusData, socketFDData, newSocketFDData;
@@ -429,7 +427,7 @@ int main(int argc, char *argv[]){
 			}
 			//if the command ws "-l"
 			else{
-				directoryContents = GetDirectoryContents();
+				GetDirectoryContents(directoryContents);
 			}
 		}
 		cout << "the command out of loop is: " << command << "\n";
