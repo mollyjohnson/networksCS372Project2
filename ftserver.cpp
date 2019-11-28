@@ -420,9 +420,8 @@ int main(int argc, char *argv[]){
 				fprintf(stderr, "Error getting address info.\n"); fflush(stdout); exit(1);
 			}
 			socketFDData = InitiateContact(servinfoData);
-			string dataMessage = "hey it's ftserver here on the data connection"; 
-			SendMessageData(socketFDData, dataMessage);
-			close(socketFDData);
+			//string dataMessage = "hey it's ftserver here on the data connection"; 
+			//SendMessageData(socketFDData, dataMessage);
 			//if the command was "-g <FILENAME>"
 			if (isFile == true){
 
@@ -430,16 +429,30 @@ int main(int argc, char *argv[]){
 			//if the command ws "-l"
 			else{
 				GetDirectoryContents(directoryContents);
-				cout << "directory contents:\n";
+				/*
 				for(int k = 0; k < directoryContents.size(); k++){
 					cout << directoryContents[k] << "\n";
 				}
+				*/
+				for(int k = 0; k < directoryContents.size(); k++){
+					if(k != directoryContents.size() - 1){
+						SendMessage(socketFDData, (directoryContents[k] + "\n"));
+					}
+					//if the last one of the packets being sent
+					else{
+						
+						SendMessage(socketFDData, (directoryContents[k] + delimiter));
+					}
+				}
 			}
+			close(socketFDData);
 		}
+		/*
 		cout << "the command out of loop is: " << command << "\n";
 		cout << "the filename out of loop is: " << filename << "\n";
 		cout << "the result of isFile bool is: " << isFile << "\n";
 		cout << "the result of goodCommand bool is: " << goodCommand << "\n";
+		*/
 		close(newSocketFDControl);
 	}
 	//freeaddrinfo(servinfoData);
