@@ -515,28 +515,26 @@ int main(int argc, char *argv[]){
 			socketFDData = InitiateContact(servinfoData);
 
 			//if the command ws "-l"
-			if (fileFound == false){
-				//retrieve directory contents and put them into the directory contents vector
-				GetDirectoryContents(directoryContents);
-				
-				//send each item in the directory contents vector, adding a newline char to each item
-				//unless it's the last item in the directory contents vector, in which case add the
-				//special delimiter char so ftclient knows the end of the data sent has been reached
-				for(int k = 0; k < directoryContents.size(); k++){
-					//if not the last item in the vector, add newline char and send to ftclient
-					if(k != directoryContents.size() - 1){
-						SendMessage(socketFDData, (directoryContents[k] + "\n"));
-					}
-					//if the last one of the messages being sent, append special delimiter char instead of a newline
-					else{
-						SendMessage(socketFDData, (directoryContents[k] + delimiter));
-					}
+			//retrieve directory contents and put them into the directory contents vector
+			GetDirectoryContents(directoryContents);
+			
+			//send each item in the directory contents vector, adding a newline char to each item
+			//unless it's the last item in the directory contents vector, in which case add the
+			//special delimiter char so ftclient knows the end of the data sent has been reached
+			for(int k = 0; k < directoryContents.size(); k++){
+				//if not the last item in the vector, add newline char and send to ftclient
+				if(k != directoryContents.size() - 1){
+					SendMessage(socketFDData, (directoryContents[k] + "\n"));
 				}
-				//erasing a vector so it's empty again excerpted from:
-				//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
-				//http://www.cplusplus.com/reference/vector/vector/erase/
-				directoryContents.erase(directoryContents.begin(), directoryContents.end());
+				//if the last one of the messages being sent, append special delimiter char instead of a newline
+				else{
+					SendMessage(socketFDData, (directoryContents[k] + delimiter));
+				}
 			}
+			//erasing a vector so it's empty again excerpted from:
+			//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
+			//http://www.cplusplus.com/reference/vector/vector/erase/
+			directoryContents.erase(directoryContents.begin(), directoryContents.end());
 			//close the data socket
 			close(socketFDData);
 		}
