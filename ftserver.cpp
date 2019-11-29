@@ -499,8 +499,9 @@ int main(int argc, char *argv[]){
 						SendMessage(socketFDData, (fileContents[k] + delimiter));
 					}
 				}
+				fileContents.erase(fileContents.begin(), fileContents.end());
+				close(socketFDData);
 			}
-			fileContents.erase(fileContents.begin(), fileContents.end());
 		}
 		//else the command was "-l"
 		else{
