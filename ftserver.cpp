@@ -180,6 +180,7 @@ void SendMessage(int sockFD, string message){
 	//copying a string to an array of chars adapted from:
 	//https://www.geeksforgeeks.org/convert-string-char-array-cpp/
 	strcpy(sendBuf, message.c_str());
+	cout << "the sendBuf prior to writing to socket is: " << sendBuf << "\n";
 	charsW = send(sockFD, sendBuf, strlen(sendBuf), 0);
 	//check that chars written is >0
 	if (charsW < 0){
@@ -279,6 +280,7 @@ pre-conditions:
 post-conditions:
 description:
 */
+/*
 void SendMessageData(int socketFDData, string dataMessage){
 	int charsW = -1;
 	//send message to serjver
@@ -310,6 +312,7 @@ void SendMessageData(int socketFDData, string dataMessage){
 		fprintf(stderr, "Ioctl error.\n"); fflush(stdout); exit(1);
 	}
 }
+*/
 
 /*
 pre-conditions:
@@ -534,7 +537,7 @@ int main(int argc, char *argv[]){
 		cout << "the result of goodCommand bool is: " << goodCommand << "\n";
 		*/
 		close(newSocketFDControl);
-		fileContents.erase(fileContents.begin(), fileContents.end());
+		//fileContents.erase(fileContents.begin(), fileContents.end());
 	}
 	//freeaddrinfo(servinfoData);
 	freeaddrinfo(servinfoControl);
