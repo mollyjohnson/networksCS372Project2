@@ -479,6 +479,14 @@ int main(int argc, char *argv[]){
 			directoryContents.erase(directoryContents.begin(), directoryContents.end());
 
 			if(fileFound == true){
+				//set up TCP data connection with ftclient (ftclient is server in this case so use their host address,
+				//and the port should be the data port not the control port)
+				statusData = getaddrinfo(CLIENT_HOST_ADDRESS, dataPort, &hintsData, &servinfoData);	
+				if(statusData < 0){
+					fprintf(stderr, "Error getting address info.\n"); fflush(stdout); exit(1);
+				}
+				//initiate contact w ftclient (ftclient now acting as a server) over the data connection
+				socketFDData = InitiateContact(servinfoData);
 				GetFileContents(fileContents, filename);
 				for(int k = 0; k < fileContents.size(); k++){
 					cout << (fileContents[k] + "\n");
@@ -492,6 +500,7 @@ int main(int argc, char *argv[]){
 					}
 				}
 			}
+			fileContents.erase(fileContents.begin(), fileContents.end());
 		}
 		//else the command was "-l"
 		else{
@@ -537,7 +546,6 @@ int main(int argc, char *argv[]){
 		cout << "the result of goodCommand bool is: " << goodCommand << "\n";
 		*/
 		close(newSocketFDControl);
-		//fileContents.erase(fileContents.begin(), fileContents.end());
 	}
 	//freeaddrinfo(servinfoData);
 	freeaddrinfo(servinfoControl);
