@@ -476,12 +476,10 @@ int main(int argc, char *argv[]){
 
 			if(fileFound == true){
 				GetFileContents(fileContents, filename);
-				//for(int k = 0; k < fileContents.size(); k++){
-				for(int k = 0; k < 5; k++){
-					//cout << (fileContents[k] + "\n");
+				for(int k = 0; k < fileContents.size(); k++){
+					cout << (fileContents[k] + "\n");
 					//if not the last item in the vector, add newline char and send to ftclient
-					//if(k != fileContents.size() - 1){
-					if(k != 5 - 1){
+					if(k != fileContents.size() - 1){
 						SendMessage(socketFDData, (fileContents[k] + "\n"));
 					}
 					//if the last one of the messages being sent, append special delimiter char instead of a newline
@@ -490,10 +488,6 @@ int main(int argc, char *argv[]){
 					}
 				}
 			}
-			//erasing a vector so it's empty again excerpted from:
-			//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
-			//http://www.cplusplus.com/reference/vector/vector/erase/
-			fileContents.erase(fileContents.begin(), fileContents.end());
 		}
 		//else the command was "-l"
 		else{
@@ -539,6 +533,7 @@ int main(int argc, char *argv[]){
 		cout << "the result of goodCommand bool is: " << goodCommand << "\n";
 		*/
 		close(newSocketFDControl);
+		fileContents.erase(fileContents.begin(), fileContents.end());
 	}
 	//freeaddrinfo(servinfoData);
 	freeaddrinfo(servinfoControl);
