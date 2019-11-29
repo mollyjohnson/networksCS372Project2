@@ -21,7 +21,7 @@ LIST_COMMAND = "-l"
 GET_COMMAND = "-g"
 SERVER_HOST_ADDRESS = "flip1.engr.oregonstate.edu"
 CLIENT_HOST_ADDRESS = "flip2.engr.oregonstate.edu"
-MAX_MESSAGE_SIZE = 500
+MAX_MESSAGE_SIZE = 5000
 
 #pre-conditions:
 #post-conditions:
