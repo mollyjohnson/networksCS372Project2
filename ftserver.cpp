@@ -367,8 +367,8 @@ void GetFileContents(vector<string> &fileContents, string filename){
 		fflush(stdout); exit(1);
 	}
 	while(getline(inputFile, line)){
-		//istringstream stream(line);
-		printf("%s\n", line.c_str());
+		//printf("%s\n", line.c_str());
+		fileContents.push_back(line);
 	}
 	inputFile.close();
 }
@@ -476,6 +476,11 @@ int main(int argc, char *argv[]){
 
 			if(fileFound == true){
 				GetFileContents(fileContents, filename);
+				cout <<"file contents are:\n";
+				for(int k = 0; k < fileContents.size(); k++){
+					cout << (fileContents[k] + "\n");
+				}
+				cout << "end of file contents.\n";
 			}
 		}
 		//else the command was "-l"
