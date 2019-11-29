@@ -180,7 +180,7 @@ void SendMessage(int sockFD, string message){
 	//copying a string to an array of chars adapted from:
 	//https://www.geeksforgeeks.org/convert-string-char-array-cpp/
 	strcpy(sendBuf, message.c_str());
-	cout << "the sendBuf prior to writing to socket is: " << sendBuf << "\n";
+	//cout << "the sendBuf prior to writing to socket is: " << sendBuf << "\n";
 	charsW = send(sockFD, sendBuf, strlen(sendBuf), 0);
 	//check that chars written is >0
 	if (charsW < 0){
@@ -489,7 +489,7 @@ int main(int argc, char *argv[]){
 				socketFDData = InitiateContact(servinfoData);
 				GetFileContents(fileContents, filename);
 				for(int k = 0; k < fileContents.size(); k++){
-					cout << (fileContents[k] + "\n");
+					//cout << (fileContents[k] + "\n");
 					//if not the last item in the vector, add newline char and send to ftclient
 					if(k != fileContents.size() - 1){
 						SendMessage(socketFDData, (fileContents[k] + "\n"));
