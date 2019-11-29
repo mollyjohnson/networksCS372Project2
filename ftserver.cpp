@@ -354,6 +354,30 @@ pre-conditions:
 post-conditions:
 description:
 */
+void GetFileContents(vector<string> &fileContents, string filename){
+	//getting file contents line by line adapted from:
+	//https://stackoverflow.com/questions/7868936/read-file-line-by-line-using-ifstream-in-c and
+	//my own work from CS 325 Algorithms at OSU, last updated 8-16-18
+
+	ifstream inputFile;
+	string line;
+	inputFile.open(filename.c_str());
+	if(!inputFile){
+		fprintf(stderr, "File not opened correctly.\n");
+		fflush(stdout); exit(1);
+	}
+	while(getline(inputFile, line)){
+		//istringstream stream(line);
+		printf("%s\n", line.c_str());
+	}
+	inputFile.close();
+}
+
+/*
+pre-conditions:
+post-conditions:
+description:
+*/
 int main(int argc, char *argv[]){
 	ArgCheck(argc, argv);	
 	char const *controlPort = argv[1];
@@ -376,6 +400,7 @@ int main(int argc, char *argv[]){
 	string dataPortString;
 	vector<string> directoryContents;
 	bool fileFound = false;
+	vector<string> fileContents;
 
 	//data socket setup info
 	int statusData, socketFDData, newSocketFDData;
@@ -423,7 +448,9 @@ int main(int argc, char *argv[]){
 			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
 			SendMessage(newSocketFDControl, errorMessage);
 		}
+		//else if there was a file and the command was -g
 		else if((isFile == true) && (command == GET_COMMAND)){
+			//check if the filename requested is present in the same directory as ftserver.cpp
 			GetDirectoryContents(directoryContents);
 			int foundFileCount = 0;
 			for(int k = 0; k < directoryContents.size(); k++){
@@ -447,8 +474,11 @@ int main(int argc, char *argv[]){
 			//http://www.cplusplus.com/reference/vector/vector/erase/
 			directoryContents.erase(directoryContents.begin(), directoryContents.end());
 
+			if(fileFound == true){
+				GetFileContents(fileContents, filename);
+			}
 		}
-		//else the command was good, either "-l" or "-g <FILENAME>"
+		//else the command was "-l"
 		else{
 			//set up TCP data connection with ftclient (ftclient is server in this case so use their host address,
 			//and the port should be the data port not the control port)
@@ -459,12 +489,8 @@ int main(int argc, char *argv[]){
 			//initiate contact w ftclient (ftclient now acting as a server) over the data connection
 			socketFDData = InitiateContact(servinfoData);
 
-			//if the command was "-g <FILENAME>"
-			if (fileFound == true){
-
-			}
 			//if the command ws "-l"
-			else{
+			if (fileFound == false){
 				//retrieve directory contents and put them into the directory contents vector
 				GetDirectoryContents(directoryContents);
 				

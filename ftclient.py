@@ -216,17 +216,26 @@ def main():
 		#if command was "-l", receive the directory contents sent from ftserver
 		if(command == LIST_COMMAND):
 			#accept connection and receive directory contents data from ftserver
-			connectionSocket, addr, dataMessage = ReceiveMessageData(socketFDData, delimiter)
+			connectionSocket, addr, directoryContents = ReceiveMessageData(socketFDData, delimiter)
 
 			#print each item in the dataMessage dynamic array
 			#for <item> in <array> loop use adapted from:
 			#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
-			for object in dataMessage:
+			for object in directoryContents:
 				print(object)
 			#close data connection socket
 			connectionSocket.close()
-		#elif((isValidFile == True) and (command == GET_COMMAND)):
-
+		elif((isValidFile == True) and (command == GET_COMMAND)):
+			print("the file was valid and command was get, need receive file contents")
+			#accept connection and receive directory contents data from ftserver
+			#connectionSocket, addr, fileContents = ReceiveMessageData(socketFDData, delimiter)
+			#print each item in the dataMessage dynamic array
+			#for <item> in <array> loop use adapted from:
+			#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
+			#for object in fileContents:
+			#	print(object)
+			#close data connection socket
+			#connectionSocket.close()
 
 	#close the control socket
 	socketFDControl.close()
