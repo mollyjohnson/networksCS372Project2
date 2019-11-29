@@ -215,6 +215,7 @@ def main():
 	if isValidCommand == True:
 		#if command was "-l", receive the directory contents sent from ftserver
 		if(command == LIST_COMMAND):
+			print("in the -l bit, need to receive the list of directory contents")
 			#accept connection and receive directory contents data from ftserver
 			connectionSocket, addr, directoryContents = ReceiveMessageData(socketFDData, delimiter)
 
