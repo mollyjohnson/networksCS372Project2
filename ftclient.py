@@ -228,14 +228,14 @@ def main():
 		elif((isValidFile == True) and (command == GET_COMMAND)):
 			print("the file was valid and command was get, need receive file contents")
 			#accept connection and receive directory contents data from ftserver
-			#connectionSocket, addr, fileContents = ReceiveMessageData(socketFDData, delimiter)
+			connectionSocket2, addr, fileContents = ReceiveMessageData(socketFDData, delimiter)
 			#print each item in the dataMessage dynamic array
 			#for <item> in <array> loop use adapted from:
 			#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
-			#for object in fileContents:
-			#	print(object)
+			for object in fileContents:
+				print(object)
 			#close data connection socket
-			#connectionSocket.close()
+			connectionSocket2.close()
 
 	#close the control socket
 	socketFDControl.close()
