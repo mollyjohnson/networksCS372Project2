@@ -287,7 +287,9 @@ void SendMessageData(int socketFDData, string dataMessage){
 	//copying a string to an array of chars adapted from:
 	//https://www.geeksforgeeks.org/convert-string-char-array-cpp/
 	strcpy(sendBuf, dataMessage.c_str());
-	charsW = send(socketFDData, sendBuf, strlen(sendBuf), 0);
+	cout << "the sendBuf prior to writing is: " << sendBuf << "\n";
+	//charsW = send(socketFDData, sendBuf, strlen(sendBuf), 0);
+	charsW = send(socketFDData, sendBuf, MAX_MSG_SIZE, 0);
 	//check that chars written is >0
 	if (charsW < 0){
 		fprintf(stderr, "Error writing to socket.\n"); fflush(stdout); exit(1);
@@ -454,7 +456,6 @@ int main(int argc, char *argv[]){
 			GetDirectoryContents(directoryContents);
 			int foundFileCount = 0;
 			for(int k = 0; k < directoryContents.size(); k++){
-				cout << "directory contents number " << k << " is: " << directoryContents[k] << "\n";
 				if(directoryContents[k] == filename){
 					foundFileCount++;
 					cout << "file found count is: " << foundFileCount << "\n";
