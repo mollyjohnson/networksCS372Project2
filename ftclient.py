@@ -235,7 +235,7 @@ def main():
 			#for object in fileContents:
 			#	print(object)
 			#close data connection socket
-			connectionSocket.close()
+			#connectionSocket.close()
 
 	#close the control socket
 	socketFDControl.close()
