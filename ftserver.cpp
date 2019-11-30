@@ -378,6 +378,7 @@ void GetFileContents(vector<string> &fileContents, string filename, int socketFD
 		//printf("%s\n", line.c_str());
 		//fileContents.push_back(line);
 		SendMessage(socketFDData, line);
+		line.clear();
 		cout << "message line" << i << " sent.\n";
 		i++;
 	}
