@@ -160,7 +160,7 @@ def ReceiveMessageData(socketFDData, delimiter):
 			#https://www.journaldev.com/23674/python-remove-character-from-string
 			messageNoDelim = (message.replace(delimiter, ''))
 			#dataArray.append(messageNoDelim)
-			print(messageNoDelim, end = '')
+			print(messageNoDelim)
 		else:
 			#dataArray.append(message)
 			print(message, end = '')
