@@ -59,7 +59,7 @@ using std::basic_string;
 #define MIN_PORT 1025
 #define NUM_ARGS 2
 #define BACKLOG 20
-#define MAX_MSG_SIZE 1028
+#define MAX_MSG_SIZE 2048
 
 /*
 pre-conditions:
@@ -175,6 +175,7 @@ description:
 void SendMessage(int sockFD, string message){
 	int charsW = -1;
 	//send message to serjver
+	/*
 	char sendBuf[MAX_MSG_SIZE];
 	memset(sendBuf, '\0', sizeof(sendBuf));
 	//copying a string to an array of chars adapted from:
@@ -182,6 +183,14 @@ void SendMessage(int sockFD, string message){
 	strcpy(sendBuf, message.c_str());
 	cout << "the length of your send buffer is: " << strlen(sendBuf) << "\n";
 	//cout << "the sendBuf prior to writing to socket is: " << sendBuf << "\n";
+	charsW = send(sockFD, sendBuf, strlen(sendBuf), 0);
+	*/
+
+	char sendBuf[strlen(message) + 1];
+	memset(sendBuf, '\0', sizeof(sendBuf));
+
+	strcpy(sendBuf, message.c_str());
+	cout << "the length of your send buffer is: " << strlen(sendBuf) << "\n";
 	charsW = send(sockFD, sendBuf, strlen(sendBuf), 0);
 
 	//check that chars written is >0
