@@ -380,9 +380,11 @@ void GetFileContents(vector<string> &fileContents, string filename, int socketFD
 		cout << "message line" << i << " sent.\n";
 		i++;
 	}
+	//converting one character to a string adapted from:
+	//https://www.geeksforgeeks.org/how-to-convert-a-single-character-to-string-in-cpp/
 	string delimString(1, delimiter);
 	SendMessage(socketFDData, delimString);
-	cout << "message line" << i << " sent.\n";
+	cout << "message line " << i << " sent.\n";
 	inputFile.close();
 }
 
