@@ -152,7 +152,7 @@ def ReceiveMessageData(socketFDData, delimiter):
 	#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
 	dataArray = []
 	message = ""
-	recvCount = 0;
+	recvCount = 0
 	while(delimiter not in message):
 		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
 		if(delimiter in message):
@@ -165,6 +165,7 @@ def ReceiveMessageData(socketFDData, delimiter):
 			#dataArray.append(message)
 			print(message, end = '')
 		print("receive loop count is: " + str(recvCount))
+		recvCount = recvCount + 1
 	return connectionSocket, addr, dataArray
 
 #pre-conditions:
