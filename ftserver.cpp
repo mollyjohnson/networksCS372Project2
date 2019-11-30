@@ -376,17 +376,17 @@ void GetFileContents(vector<string> &fileContents, string filename, int socketFD
 	int i = 0;
 	while(getline(inputFile, line)){
 		//printf("%s\n", line.c_str());
-		//fileContents.push_back(line);
-		SendMessage(socketFDData, line);
-		line.clear();
-		cout << "message line" << i << " sent.\n";
-		i++;
+		fileContents.push_back(line);
+		//SendMessage(socketFDData, line);
+		//line.clear();j
+		//cout << "message line" << i << " sent.\n";
+		//i++;
 	}
 	//converting one character to a string adapted from:
 	//https://www.geeksforgeeks.org/how-to-convert-a-single-character-to-string-in-cpp/
-	string delimString(1, delimiter);
-	SendMessage(socketFDData, delimString);
-	cout << "message line " << i << " sent.\n";
+	//string delimString(1, delimiter);
+	//SendMessage(socketFDData, delimString);
+	//cout << "message line " << i << " sent.\n";
 	inputFile.close();
 }
 
@@ -500,8 +500,6 @@ int main(int argc, char *argv[]){
 				//initiate contact w ftclient (ftclient now acting as a server) over the data connection
 				socketFDData = InitiateContact(servinfoData);
 				GetFileContents(fileContents, filename, socketFDData, delimiter);
-				/*
-				cout << "file contents vector size is: " << fileContents.size() << "\n";
 				for(int k = 0; k < fileContents.size(); k++){
 					//cout << (fileContents[k] + "\n");
 					//if not the last item in the vector, add newline char and send to ftclient
@@ -512,9 +510,9 @@ int main(int argc, char *argv[]){
 					else{
 						SendMessage(socketFDData, (fileContents[k] + delimiter));
 					}
+					cout << "message sent for line " << k << "\n";	
 				}
 				fileContents.erase(fileContents.begin(), fileContents.end());
-				*/
 				close(socketFDData);
 			}
 		}
