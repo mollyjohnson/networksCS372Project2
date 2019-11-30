@@ -165,6 +165,7 @@ def ReceiveMessageData(socketFDData, delimiter):
 			#dataArray.append(message)
 			print(message, end = '')
 		print("\nreceive loop count is: " + str(recvCount))
+		print("is delimiter in message: " + str(delimiter in message))
 		recvCount = recvCount + 1
 	return connectionSocket, addr, dataArray
 

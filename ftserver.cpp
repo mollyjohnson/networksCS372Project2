@@ -173,7 +173,6 @@ post-conditions:
 description:
 */
 void SendMessage(int sockFD, string message){
-	cout << "YOU'RE IN SEND_MESSAGE\n";
 	int charsW = -1;
 	//send message to serjver
 	char sendBuf[MAX_MSG_SIZE];
@@ -361,7 +360,7 @@ pre-conditions:
 post-conditions:
 description:
 */
-void GetFileContents(vector<string> &fileContents, string filename){
+void GetFileContents(vector<string> &fileContents, string filename, int socketFDData, char delimiter){
 	//getting file contents line by line adapted from:
 	//https://stackoverflow.com/questions/7868936/read-file-line-by-line-using-ifstream-in-c and
 	//my own work from CS 325 Algorithms at OSU, last updated 8-16-18
@@ -373,10 +372,17 @@ void GetFileContents(vector<string> &fileContents, string filename){
 		fprintf(stderr, "File not opened correctly.\n");
 		fflush(stdout); exit(1);
 	}
+	int i = 0;
 	while(getline(inputFile, line)){
 		//printf("%s\n", line.c_str());
-		fileContents.push_back(line);
+		//fileContents.push_back(line);
+		SendMessage(socketFDData, line);
+		cout << "message line" << i << " sent.\n";
+		i++;
 	}
+	string delim = delimiter.c_str();
+	SendMessage(socketFDData, delim);
+	cout << "message line" << i << " sent.\n";
 	inputFile.close();
 }
 
@@ -489,7 +495,8 @@ int main(int argc, char *argv[]){
 				}
 				//initiate contact w ftclient (ftclient now acting as a server) over the data connection
 				socketFDData = InitiateContact(servinfoData);
-				GetFileContents(fileContents, filename);
+				GetFileContents(fileContents, filename, socketFDData, delimiter);
+				/*
 				cout << "file contents vector size is: " << fileContents.size() << "\n";
 				for(int k = 0; k < fileContents.size(); k++){
 					//cout << (fileContents[k] + "\n");
@@ -503,6 +510,7 @@ int main(int argc, char *argv[]){
 					}
 				}
 				fileContents.erase(fileContents.begin(), fileContents.end());
+				*/
 				close(socketFDData);
 			}
 		}
