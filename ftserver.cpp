@@ -490,6 +490,7 @@ int main(int argc, char *argv[]){
 				//initiate contact w ftclient (ftclient now acting as a server) over the data connection
 				socketFDData = InitiateContact(servinfoData);
 				GetFileContents(fileContents, filename);
+				cout << "file contents vector size is: " << fileContents.size() << "\n";
 				for(int k = 0; k < fileContents.size(); k++){
 					//cout << (fileContents[k] + "\n");
 					//if not the last item in the vector, add newline char and send to ftclient
