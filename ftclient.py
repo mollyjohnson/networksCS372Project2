@@ -21,7 +21,7 @@ LIST_COMMAND = "-l"
 GET_COMMAND = "-g"
 SERVER_HOST_ADDRESS = "flip1.engr.oregonstate.edu"
 CLIENT_HOST_ADDRESS = "flip2.engr.oregonstate.edu"
-MAX_MESSAGE_SIZE = 1000
+MAX_MESSAGE_SIZE = 1028
 
 #pre-conditions:
 #post-conditions:
@@ -152,15 +152,19 @@ def ReceiveMessageData(socketFDData, delimiter):
 	#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
 	dataArray = []
 	message = ""
+	recvCount = 0;
 	while(delimiter not in message):
 		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
 		if(delimiter in message):
 			#removing a char from a string adapted from:
 			#https://www.journaldev.com/23674/python-remove-character-from-string
 			messageNoDelim = (message.replace(delimiter, ''))
-			dataArray.append(messageNoDelim)
+			#dataArray.append(messageNoDelim)
+			print(messageNoDelim, end = '')
 		else:
-			dataArray.append(message)
+			#dataArray.append(message)
+			print(message, end = '')
+		print("receive loop count is: " + str(recvCount))
 	return connectionSocket, addr, dataArray
 
 #pre-conditions:
@@ -222,21 +226,21 @@ def main():
 			#print each item in the dataMessage dynamic array
 			#for <item> in <array> loop use adapted from:
 			#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
-			for object in directoryContents:
-				print(object)
+			#for object in directoryContents:
+			#	print(object)
 			#close data connection socket
 			connectionSocket.close()
 		elif((isValidFile == True) and (command == GET_COMMAND)):
 			print("the file was valid and command was get, need receive file contents")
 			#accept connection and receive directory contents data from ftserver
-			connectionSocket2, addr, fileContents = ReceiveMessageData(socketFDData, delimiter)
+			connectionSocket, addr, fileContents = ReceiveMessageData(socketFDData, delimiter)
 			#print each item in the dataMessage dynamic array
 			#for <item> in <array> loop use adapted from:
 			#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
-			for object in fileContents:
-				print(object)
+			#for object in fileContents:
+			#	print(object)
 			#close data connection socket
-			connectionSocket2.close()
+			connectionSocket.close()
 
 	#close the control socket
 	socketFDControl.close()
