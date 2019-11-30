@@ -175,7 +175,7 @@ description:
 void SendMessage(int sockFD, string message){
 	int charsW = -1;
 	//send message to serjver
-	char sendBuf[MAX_MSG_SIZE];
+	/*char sendBuf[MAX_MSG_SIZE];
 	memset(sendBuf, '\0', sizeof(sendBuf));
 	//copying a string to an array of chars adapted from:
 	//https://www.geeksforgeeks.org/convert-string-char-array-cpp/
@@ -183,6 +183,10 @@ void SendMessage(int sockFD, string message){
 	cout << "the length of your send buffer is: " << strlen(sendBuf) << "\n";
 	//cout << "the sendBuf prior to writing to socket is: " << sendBuf << "\n";
 	charsW = send(sockFD, sendBuf, strlen(sendBuf), 0);
+	*/
+	cout << "the length of your send buffer is: " << message.length() << "\n";
+	cout << "the message prior to writing to socket is: " << message << "\n";
+	charsW = send(sockFD, message.c_str(), strlen(message), 0);
 	//check that chars written is >0
 	if (charsW < 0){
 		fprintf(stderr, "Error writing to socket.\n"); fflush(stdout); exit(1);
