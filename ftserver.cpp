@@ -173,6 +173,7 @@ post-conditions:
 description:
 */
 void SendMessage(int sockFD, string message){
+	cout << "YOU'RE IN SEND_MESSAGE\n";
 	int charsW = -1;
 	//send message to serjver
 	char sendBuf[MAX_MSG_SIZE];
@@ -180,6 +181,7 @@ void SendMessage(int sockFD, string message){
 	//copying a string to an array of chars adapted from:
 	//https://www.geeksforgeeks.org/convert-string-char-array-cpp/
 	strcpy(sendBuf, message.c_str());
+	cout << "the length of your send buffer is: " << strlen(sendBuf) << "\n";
 	//cout << "the sendBuf prior to writing to socket is: " << sendBuf << "\n";
 	charsW = send(sockFD, sendBuf, strlen(sendBuf), 0);
 	//check that chars written is >0
