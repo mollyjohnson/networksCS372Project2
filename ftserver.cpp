@@ -380,7 +380,7 @@ void GetFileContents(vector<string> &fileContents, string filename, int socketFD
 		cout << "message line" << i << " sent.\n";
 		i++;
 	}
-	string delim = delimiter.c_str();
+	string delim = delimiter;
 	SendMessage(socketFDData, delim);
 	cout << "message line" << i << " sent.\n";
 	inputFile.close();
