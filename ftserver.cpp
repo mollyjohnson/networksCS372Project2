@@ -508,6 +508,7 @@ int main(int argc, char *argv[]){
 
 		//else if there was a file and the command was -g
 		else if((isFile == true) && (command == GET_COMMAND)){
+			cout << "File \"" << filename << "\" requested on port " << dataPort << ".\n";
 
 			//check if the filename requested is present in the same directory as ftserver
 			GetDirectoryContents(directoryContents);
@@ -552,9 +553,12 @@ int main(int argc, char *argv[]){
 
 				//initiate contact w ftclient (ftclient now acting as a server) over the data connection
 				socketFDData = InitiateContact(servinfoData);
-
+				
 				//get the contents of the requested file
 				GetFileContents(fileContents, filename, socketFDData, delimiter);
+				cout << "Sending \"" << filename << "\" to" << CLIENT_HOST_ADDRESS <<
+						":" << dataPort << "\n";
+
 				for(int k = 0; k < fileContents.size(); k++){
 					//if not the last item in the vector, add newline char and send to ftclient
 					if(k != fileContents.size() - 1){
@@ -577,6 +581,7 @@ int main(int argc, char *argv[]){
 			//set up TCP data connection with ftclient (ftclient is server in this case so use their host address,
 			//and the port should be the data port not the control port)
 			//adapted from: http://beej.us/guide/bgnet/html/#a-simple-stream-client
+			cout << "List directory requested on port " << dataPort << ".\n";
 			statusData = getaddrinfo(CLIENT_HOST_ADDRESS, dataPort, &hintsData, &servinfoData);	
 
 			//check status, if getaddrinfo returned <0, print error and exit
@@ -594,6 +599,8 @@ int main(int argc, char *argv[]){
 			//send each item in the directory contents vector, adding a newline char to each item
 			//unless it's the last item in the directory contents vector, in which case add the
 			//special delimiter char so ftclient knows the end of the data sent has been reached
+			cout << "Sending directory contents to " << CLIENT_HOST_ADDRESS << ":" 
+					<< dataPort << "\n";
 			for(int k = 0; k < directoryContents.size(); k++){
 				//if not the last item in the vector, add newline char and send to ftclient
 				if(k != directoryContents.size() - 1){

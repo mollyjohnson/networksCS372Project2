@@ -397,6 +397,7 @@ def main():
 	if isValidCommand == True:
 		#if command was "-l", receive the directory contents sent from ftserver
 		if(command == LIST_COMMAND):
+			print("Receiving directory structure from " + SERVER_HOST_ADDRESS + ":" + str(dataPort))
 			
 			#accept connection and receive directory contents data from ftserver and print
 			connectionSocket, addr = ReceiveMessageDirectory(socketFDData, delimiter)
@@ -419,9 +420,11 @@ def main():
 			else:
 				newFilename = filename
 				
+			print("Receiving \"" + newFilename + "\" from " + SERVER_HOST_ADDRESS + ":" + str(dataPort))
+
 			#receive message over the data connection and write to the new file
 			connectionSocket, addr = ReceiveMessageFile(socketFDData, delimiter, newFilename)
-
+			print("File transfer complete.")
 			#close data connection socket
 			connectionSocket.close()
 
