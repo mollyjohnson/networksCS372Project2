@@ -8,7 +8,7 @@
 #Program name: ftclient
 #Program description: ftclient acts as the client for the control connection portion of
 #this program, and as the server for the data connection portion of this program. Will
-#set up a socket and listen for connections, send control info to the server and see
+#set up a socket and listen for connections, send control info to ftserver and see
 #if the message received back indicates the control info was acceptable or not and if
 #it was acceptable, this program will create a server socket and wait for a data
 #connection from ftserver. It will then receive either the current directory's contents
@@ -30,6 +30,7 @@ import os
 #in c or c++ as all-caps variables so I would know not to change them
 MAX_NUM_ARGS = 6
 MIN_NUM_ARGS = 5
+#listed as valid port num range by TA Danielle on slack OSU 372 Fall 2019
 MAX_PORT = 65535
 MIN_PORT = 1025
 LIST_COMMAND = "-l"
