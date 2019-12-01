@@ -9,9 +9,12 @@
 #Course name: CS 372 Intro to Networks
 #Last modified:
 
-#imported libraries for socket (to create socket and use it) and sys (system, used to get input from the user)
+#imported libraries for socket (to create socket and use it), (system, used to get input from the user),
+
 from socket import *
 import sys
+#from os import listdir
+import os
 
 MAX_NUM_ARGS = 6
 MIN_NUM_ARGS = 5
@@ -208,7 +211,12 @@ def FileNameFound(controlMessage):
 #post-conditions:
 #description:
 def DupFileCheck(filename):
-	
+	#getting everything from a directory in python adapted from:
+	#https://stackoverflow.com/questions/3207219/how-do-i-list-all-files-of-a-directory
+	directoryContents = os.listdir()
+	for x in directoryContents:
+		if(x == filename):
+			return True;
 
 #pre-conditions:
 #post-conditions:
