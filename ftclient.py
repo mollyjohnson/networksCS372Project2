@@ -282,7 +282,7 @@ def main():
 			print("the duplicate file bool is: " + str(dupFileFound))
 			
 			#check if the filename already exists on the flip ftclient is running on
-			if(dupFileFound == true):
+			if(dupFileFound == True):
 				newFilename = GetDupFileChoice() 
 				
 				connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, newFilename)
