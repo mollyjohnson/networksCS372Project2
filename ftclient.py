@@ -260,6 +260,24 @@ def main():
 			#check if the filename already exists on the flip ftclient is running on
 			if(dupFileFound == true):
 				#handle duplicate file
+				print("The filename you entered is a duplicate. Do you want to overwrite it?")
+				print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename.")
+				userChoice = ""
+				while((str(userChoice) != "yes") and (str(userChoice) != "no")):
+					userChoice = input()
+					if(str(userChoice) == "yes"):
+						newFilename = filename
+					elif(str(userChoice) == "no"):
+						print("Enter new file name:")
+						newFilename = input()
+						if(newFilename == filename):
+							print("You entered the same duplicate filename, please try again.")
+							print("Enter new file name:")
+							userChoice = "ERROR"
+					else:
+						print("You didn't enter \"yes\" or \"no\", please try again.")
+						print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename.")
+
 				
 				connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, newFilename)
 			#else if the filename doesn't exist on the flip ftclient is running on
