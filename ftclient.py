@@ -225,7 +225,7 @@ def GetDupFileChoice():
 		else:
 			print("You didn't enter \"yes\" or \"no\", please try again.")
 			print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename.")
-return newFilename
+	return newFilename
 						
 #pre-conditions:
 #post-conditions:
