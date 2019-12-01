@@ -6,4 +6,3 @@ Course Name: CS 372 Intro to Networks
 Last Modified:
 
 Instructions for how to compile, execute, and control the program:
-

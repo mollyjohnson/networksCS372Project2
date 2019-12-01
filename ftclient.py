@@ -173,8 +173,7 @@ def ReceiveMessageFile(socketFDData, delimiter, filename):
 	#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
 	dataArray = []
 	message = ""
-	TEMP_FILENAME = "newFile.txt"
-	file1 = open(TEMP_FILENAME, "w")
+	file1 = open(filename, "w")
 	while(delimiter not in message):
 		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
 		if(delimiter in message):
@@ -204,25 +203,35 @@ def FileNameFound(controlMessage):
 	else:
 		#print("file was found.\n")
 		return True
+
+#pre-conditions:
+#post-conditions:
+#description:
+def DupFileCheck(filename):
+	
+
 #pre-conditions:
 #post-conditions:
 #description:	
-def GetDupFileChoice():
+def GetDupFileChoice(filename):
 	#handle duplicate file
-	print("The filename you entered is a duplicate. Do you want to overwrite it?")
-	print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename.")
+	print("\nThe filename (" + str(filename) + ") you entered is a duplicate. Do you want to overwrite it?")
+	print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename:")
 	userChoice = ""
+	count = 0
 	while((str(userChoice) != "yes") and (str(userChoice) != "no")):
 		userChoice = input()
 		if(str(userChoice) == "yes"):
-			newFilename = filename
+			if(count == 0):
+				newFilename = filename
 		elif(str(userChoice) == "no"):
 			print("Enter new file name:")
 			newFilename = input()
-			if(newFilename == filename):
-				print("You entered the same duplicate filename, please try again.")
-				print("Enter new file name:")
+			if(DupFileCheck(newFilename) == True):
+				print("You entered another duplicate filename (" + str(newFilename) + "), please try again.")
+				print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename:")
 				userChoice = "ERROR"
+				count = count + 1
 		else:
 			print("You didn't enter \"yes\" or \"no\", please try again.")
 			print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename.")
@@ -277,19 +286,18 @@ def main():
 			connectionSocket.close()
 		#if the filename is found on the flip ftserver is running on and the command was -g
 		elif((isValidFileFTserver == True) and (command == GET_COMMAND)):
-			#dupFileFound = DupFileCheck(filename)
-			dupFileFound = False
-			
+			dupFileFound = DupFileCheck(filename)
 			print("the duplicate file bool is: " + str(dupFileFound))
 			
 			#check if the filename already exists on the flip ftclient is running on
 			if(dupFileFound == True):
-				newFilename = GetDupFileChoice() 
-				
-				connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, newFilename)
-			#else if the filename doesn't exist on the flip ftclient is running on
+				newFilename = GetDupFileChoice(filename) 
 			else:
-				connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, filename)	
+				newFilename = filename
+				
+			connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, newFilename)
+			#else if the filename doesn't exist on the flip ftclient is running on
+			#connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, filename)	
 			#print each item in the dataMessage dynamic array
 			#for <item> in <array> loop use adapted from:
 			#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
