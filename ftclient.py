@@ -187,7 +187,8 @@ def ReceiveMessageFile(socketFDData, delimiter, filename):
 		else:
 			#dataArray.append(message)
 			#print(message, end = '')
-			file1.write(message, end = '')
+			#file1.write(message, end = '')
+			file1.write(message)
 	file1.close()
 	return connectionSocket, addr, dataArray
 
