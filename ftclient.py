@@ -174,7 +174,7 @@ def ReceiveMessage(sockFD):
 #pre-conditions:
 #post-conditions:
 #description:
-def RecdCommandCheck(controlMessage):
+def RecdCommandCheck(controlMessage, dataPort):
 	#the error message ftserver will send if the command sent by ftclient was invalid
 	errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n" 
 	
@@ -182,7 +182,7 @@ def RecdCommandCheck(controlMessage):
 	#control connection. If so, print this error message to the user and return false
 	#since command was bad. otherwise if command was good, return true
 	if(controlMessage == errorMessage):
-		print(controlMessage, end = '')
+		print(SERVER_HOST_ADDRESS + ":" + str(dataPort) + " says:\n" + controlMessage, end = '')
 		return False
 	return True
 
@@ -269,7 +269,7 @@ def ReceiveMessageFile(socketFDData, delimiter, filename):
 #pre-conditions:
 #post-conditions:
 #description:
-def FileNameFound(controlMessage):
+def FileNameFound(controlMessage, dataPort):
 	#the error message ftserver will send if the file wasn't found
 	errorMessage = "File not found.\n"
 
@@ -277,7 +277,7 @@ def FileNameFound(controlMessage):
 	#control connection. If so, print this error message to the user and return false
 	#since file name wasn't found. Otherwise if file was found, return true.
 	if(controlMessage == errorMessage):
-		print(controlMessage, end = '')
+		print(SERVER_HOST_ADDRESS + ":" + str(dataPort) + " says FILE NOT FOUND")
 		return False
 	else:
 		return True
@@ -385,13 +385,13 @@ def main():
 	controlMessage = ReceiveMessage(socketFDControl)
 
 	#check if ftserver found the command send in the controlMessage to be valid or not
-	isValidCommand = RecdCommandCheck(controlMessage)
+	isValidCommand = RecdCommandCheck(controlMessage, dataPort)
 
 	#if the command was valid and it was -g and a filename (instead of just -l),
 	#check if ftserver found the filename ftclient requested on the host ftserver is
 	#running on.
 	if ((isValidCommand == True) and (command == GET_COMMAND)): 
-		isValidFileFTserver = FileNameFound(controlMessage)
+		isValidFileFTserver = FileNameFound(controlMessage, dataPort)
 
 	#if was a valid command (either -l or -g and a filename), continue
 	if isValidCommand == True:

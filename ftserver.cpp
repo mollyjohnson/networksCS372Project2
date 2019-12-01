@@ -524,6 +524,9 @@ int main(int argc, char *argv[]){
 			//to ftclient over control connection and set filefound to false
 			if(foundFileCount == 0){
 				string errorMessage = "File not found.\n";
+				cout << "File not found. Sending error message to " << CLIENT_HOST_ADDRESS 
+						<< ":" << dataPort << "\n";
+
 				SendMessage(newSocketFDControl, errorMessage);
 				fileFound = false;
 			}
@@ -532,6 +535,9 @@ int main(int argc, char *argv[]){
 				fileFound = true;
 			}
 
+			//erasing a vector so it's empty again excerpted from:
+			//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
+			//http://www.cplusplus.com/reference/vector/vector/erase/
 			//erasing a vector so it's empty again excerpted from:
 			//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
 			//http://www.cplusplus.com/reference/vector/vector/erase/
@@ -612,9 +618,6 @@ int main(int argc, char *argv[]){
 				}
 			}
 			//erasing a vector so it's empty again excerpted from:
-			//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
-			//http://www.cplusplus.com/reference/vector/vector/erase/
-			//erase vect in case loops around again for a new connection later
 			directoryContents.erase(directoryContents.begin(), directoryContents.end());
 
 			//close the data socket
