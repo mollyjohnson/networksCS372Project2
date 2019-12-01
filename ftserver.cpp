@@ -59,7 +59,8 @@ using std::basic_string;
 #define MIN_PORT 1025
 #define NUM_ARGS 2
 #define BACKLOG 20
-#define MAX_MSG_SIZE 2048
+//#define MAX_MSG_SIZE 100
+#define MAX_MSG_SIZE 1000
 
 /*
 pre-conditions:

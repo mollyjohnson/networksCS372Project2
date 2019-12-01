@@ -21,7 +21,8 @@ LIST_COMMAND = "-l"
 GET_COMMAND = "-g"
 SERVER_HOST_ADDRESS = "flip1.engr.oregonstate.edu"
 CLIENT_HOST_ADDRESS = "flip2.engr.oregonstate.edu"
-MAX_MESSAGE_SIZE = 2048
+#MAX_MESSAGE_SIZE = 100
+MAX_MESSAGE_SIZE = 1000
 
 #pre-conditions:
 #post-conditions:
@@ -145,14 +146,13 @@ def SocketStartup(dataHostAddress, dataPort):
 
 	return dataSocket
 
-def ReceiveMessageData(socketFDData, delimiter):
+def ReceiveMessageDirectory(socketFDData, delimiter):
 	connectionSocket, addr = socketFDData.accept()
 
 	#creating a dynamic array in python adapted from:
 	#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
 	dataArray = []
 	message = ""
-	recvCount = 0
 	while(delimiter not in message):
 		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
 		if(delimiter in message):
@@ -164,9 +164,26 @@ def ReceiveMessageData(socketFDData, delimiter):
 		else:
 			#dataArray.append(message)
 			print(message, end = '')
-		#print("\nreceive loop count is: " + str(recvCount))
-		#print("is delimiter in message: " + str(delimiter in message))
-		recvCount = recvCount + 1
+	return connectionSocket, addr, dataArray
+
+def ReceiveMessageFile(socketFDData, delimiter, filename):
+	connectionSocket, addr = socketFDData.accept()
+
+	#creating a dynamic array in python adapted from:
+	#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
+	dataArray = []
+	message = ""
+	while(delimiter not in message):
+		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
+		if(delimiter in message):
+			#removing a char from a string adapted from:
+			#https://www.journaldev.com/23674/python-remove-character-from-string
+			messageNoDelim = (message.replace(delimiter, ''))
+			#dataArray.append(messageNoDelim)
+			#print(messageNoDelim)
+		else:
+			#dataArray.append(message)
+			#print(message, end = '')
 	return connectionSocket, addr, dataArray
 
 #pre-conditions:
@@ -179,7 +196,7 @@ def FileNameFound(controlMessage):
 		print(controlMessage, end = '')
 		return False
 	else:
-		print("file was found.\n")
+		#print("file was found.\n")
 		return True
 
 #pre-conditions:
@@ -195,7 +212,7 @@ def main():
 	#list of ascii control characters found from:
 	#https://www.ascii-code.com/
 	delimiter = chr(3)
-	isValidFile = False
+	isValidFileFTserver = False
 
 	if numArgs == MAX_NUM_ARGS:
 		controlPort, serverHost, command, filename, dataPort, controlMessage = SixArgAssignVars(delimiter)	
@@ -212,10 +229,7 @@ def main():
 	isValidCommand = RecdCommandCheck(controlMessage)
 
 	if ((isValidCommand == True) and (command == GET_COMMAND)): 
-		isValidFile = FileNameFound(controlMessage)
-
-	print("the isValidCommand bool is: " + str(isValidCommand))
-	print("the isValidFile bool is: " + str(isValidFile))
+		isValidFileFTserver = FileNameFound(controlMessage)
 
 	#check if the command was valid
 	if isValidCommand == True:
@@ -223,7 +237,7 @@ def main():
 		if(command == LIST_COMMAND):
 			print("in the -l bit, need to receive the list of directory contents")
 			#accept connection and receive directory contents data from ftserver
-			connectionSocket, addr, directoryContents = ReceiveMessageData(socketFDData, delimiter)
+			connectionSocket, addr, directoryContents = ReceiveMessageDirectory(socketFDData, delimiter)
 
 			#print each item in the dataMessage dynamic array
 			#for <item> in <array> loop use adapted from:
@@ -232,10 +246,18 @@ def main():
 			#	print(object)
 			#close data connection socket
 			connectionSocket.close()
-		elif((isValidFile == True) and (command == GET_COMMAND)):
-			print("the file was valid and command was get, need receive file contents")
-			#accept connection and receive directory contents data from ftserver
-			connectionSocket, addr, fileContents = ReceiveMessageData(socketFDData, delimiter)
+		#if the filename is found on the flip ftserver is running on and the command was -g
+		elif((isValidFileFTserver == True) and (command == GET_COMMAND)):
+			dupFileFound = DupFileCheck(filename)
+			
+			#check if the filename already exists on the flip ftclient is running on
+			if(dupFileFound == true):
+				#handle duplicate file
+				
+				#connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, newFilename)
+			#else if the filename doesn't exist on the flip ftclient is running on
+			else:
+				connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, filename)	
 			#print each item in the dataMessage dynamic array
 			#for <item> in <array> loop use adapted from:
 			#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
