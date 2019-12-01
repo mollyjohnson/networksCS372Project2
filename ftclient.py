@@ -224,7 +224,7 @@ def DupFileCheck(filename):
 def GetDupFileChoice(filename):
 	#handle duplicate file
 	print("\nThe filename (" + str(filename) + ") you entered is a duplicate. Do you want to overwrite it?")
-	print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename:")
+	print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename: ", end = '')
 	userChoice = ""
 	count = 0
 	while((str(userChoice) != "yes") and (str(userChoice) != "no")):
@@ -233,16 +233,16 @@ def GetDupFileChoice(filename):
 			if(count == 0):
 				newFilename = filename
 		elif(str(userChoice) == "no"):
-			print("Enter new file name:")
+			print("Enter new file name: ", end = '')
 			newFilename = input()
 			if(DupFileCheck(newFilename) == True):
-				print("You entered another duplicate filename (" + str(newFilename) + "), please try again.")
-				print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename:")
+				print("\nYou entered another duplicate filename (" + str(newFilename) + "), please try again.")
+				print("Type \"yes\" (minus quotes) to overwrite this file ("+ str(newFilename) + "), or \"no\" (minus quotes) to enter a new filename: ", end = '')
 				userChoice = "ERROR"
 				count = count + 1
 		else:
-			print("You didn't enter \"yes\" or \"no\", please try again.")
-			print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename.")
+			print("\nYou didn't enter \"yes\" or \"no\", please try again.")
+			print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename. ", end = '')
 	return newFilename
 						
 #pre-conditions:
