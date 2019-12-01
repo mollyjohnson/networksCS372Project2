@@ -173,6 +173,8 @@ def ReceiveMessageFile(socketFDData, delimiter, filename):
 	#https://stackoverflow.com/questions/2910864/in-python-how-can-i-declare-a-dynamic-array
 	dataArray = []
 	message = ""
+	TEMP_FILENAME = "newFile.txt"
+	file1 = open(TEMP_FILENAME, "w")
 	while(delimiter not in message):
 		message = connectionSocket.recv(MAX_MESSAGE_SIZE).decode()
 		if(delimiter in message):
@@ -181,9 +183,12 @@ def ReceiveMessageFile(socketFDData, delimiter, filename):
 			messageNoDelim = (message.replace(delimiter, ''))
 			#dataArray.append(messageNoDelim)
 			#print(messageNoDelim)
+			file1.write(messageNoDelim)
 		else:
 			#dataArray.append(message)
 			#print(message, end = '')
+			file1.write(message, end = '')
+	file1.close()
 	return connectionSocket, addr, dataArray
 
 #pre-conditions:
@@ -250,11 +255,13 @@ def main():
 		elif((isValidFileFTserver == True) and (command == GET_COMMAND)):
 			dupFileFound = DupFileCheck(filename)
 			
+			print("the duplicate file bool is: " + str(dupFileFound))
+			
 			#check if the filename already exists on the flip ftclient is running on
 			if(dupFileFound == true):
 				#handle duplicate file
 				
-				#connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, newFilename)
+				connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, newFilename)
 			#else if the filename doesn't exist on the flip ftclient is running on
 			else:
 				connectionSocket, addr, fileContents = ReceiveMessageFile(socketFDData, delimiter, filename)	
