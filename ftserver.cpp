@@ -478,11 +478,13 @@ int main(int argc, char *argv[]){
 
 	//startup server for control connection
 	socketFDControl = ServerSocketStartup(controlPort, servinfoControl);
+	cout << "Server open on " << controlPort << "\n";
 
 	//loop until SIGINT (ctrl-c) is received
 	while(1){
 		//accept control connection
 		newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
+		cout << "Connection from " << CLIENT_HOST_ADDRESS << ".\n";
 
 		//receive message from ftclient over control connection
 		controlMsgRecd = ReceiveMessage(newSocketFDControl);
