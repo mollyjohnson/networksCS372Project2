@@ -43,8 +43,12 @@ CLIENT_HOST_ADDRESS = "flip2.engr.oregonstate.edu"
 MAX_MESSAGE_SIZE = 1028
 
 #pre-conditions: delimiter has been initialized, number of args has been checked
-#post-conditions: 
-#description:
+#post-conditions: will set variables to their corresponding system argument, control
+#connection combined message will be created w these vars plus the delimiter
+#description: receives special delimiter char. assigns vars based on the number
+#of args. combines the vars needed to sent to ftserver over the control connection
+#into one message string, separated by the special delimiter. will return the
+#variables.
 def FiveArgAssignVars(delimiter):
 	#set variables to their corresponding args
 	controlPort = int(sys.argv[2])
@@ -59,8 +63,12 @@ def FiveArgAssignVars(delimiter):
 	return controlPort, serverHost, command, dataPort, controlMessage
 
 #pre-conditions: delimiter has been initialized, number of args has been checked 
-#post-conditions:
-#description:
+#post-conditions: will set variables to their corresponding system argument, control
+#connection combined message will be created w these vars plus the delimiter
+#description: receives special delimiter char. assigns vars based on the number
+#of args. combines the vars needed to sent to ftserver over the control connection
+#into one message string, separated by the special delimiter. will return the
+#variables.
 def SixArgAssignVars(delimiter):
 	#set variables to their corresponding args
 	controlPort = int(sys.argv[2])
@@ -75,9 +83,10 @@ def SixArgAssignVars(delimiter):
 	#return all variables
 	return controlPort, serverHost, command, filename, dataPort, controlMessage
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: num command line arguments have been checked and are 5
+#post-conditions: port nums (both data and control connections) will be validated
+#description: checks that the port nums (positions 2 and 4) are non-neg integers
+#within the valid port num range. if they're not, will print error msg and exit. 
 def FiveArgCheck():
 	#if there's the right nuber of arguments, make sure the argument is a valid port number.
 	#using isdigit() to check if a string represents a non-negative integer adapted from:
@@ -93,9 +102,11 @@ def FiveArgCheck():
 		print("You entered a port number outside the valid port number range (1025-65535). Must enter a valid port number. Start the program again.")
 		exit()
 
-#pre-conditions:
-#post-conditions:
-#description:
+
+#pre-conditions: num command line arguments have been checked and are 6
+#post-conditions: port nums (both data and control connections) will be validated
+#description: checks that the port nums (positions 2 and 5) are non-neg integers
+#within the valid port num range. if they're not, will print error msg and exit.
 def SixArgCheck():
 	#if there's the right nuber of arguments, make sure the argument is a valid port number.
 	#using isdigit() to check if a string represents a non-negative integer adapted from:
@@ -111,9 +122,12 @@ def SixArgCheck():
 		print("You entered a port number outside the valid port number range (1025-65535). Must enter a valid port number. Start the program again.")
 		exit()
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: user has entered some command line args
+#post-conditions: number of args will have been validated
+#description: will check that the num of args is either 5 or 6 (the only
+#two valid options). If num args is any other number, will print error msg and exit.
+#if is either 5 or 6 args, will call the appropriate argCheck function to validate
+#the contents of the args. will then return the num of args
 def ArgNumCheck():
 	#check that the number of args is either 5 (no filename) or 6 (filename)
 	if ((len(sys.argv) != MAX_NUM_ARGS) and (len(sys.argv) != MIN_NUM_ARGS)):
