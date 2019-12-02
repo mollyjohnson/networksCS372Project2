@@ -15,13 +15,13 @@ all: FTP
 #the python version when trying to run the script (i.e. you could do ./ftclient insteady of python3 ./ftclient)
 FTP: ftserver.cpp
 	g++ -std=c++11 ftserver.cpp -o ftserver
-	chmod +x ftclient.py
+	#chmod +x ftclient.py
 	
 #if the user enters "make clean" or "make cleanall", remove the ftserver executable and
 #remove the executable permissions from the ftclient python file.
 clean:
 	rm -f ftserver
-	chmod -x ftclient.py
+	#chmod -x ftclient.py
 cleanall: 
 	rm -f ftserver
-	chmod -x ftclient.py
+	#chmod -x ftclient.py

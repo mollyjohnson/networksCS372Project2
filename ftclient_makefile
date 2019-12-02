@@ -13,15 +13,15 @@ all: FTP
 #the ftserver executable using g++. Also includes the chmod +x command to add executable permissions
 #to the ftclient file (which is a python file) so that this script can be executed without needing to specify
 #the python version when trying to run the script (i.e. you could do ./ftclient insteady of python3 ./ftclient)
-FTP: ftserver.cpp
-	g++ -std=c++11 ftserver.cpp -o ftserver
+FTP: ftclient.py
+	#g++ -std=c++11 ftserver.cpp -o ftserver
 	chmod +x ftclient.py
 	
 #if the user enters "make clean" or "make cleanall", remove the ftserver executable and
 #remove the executable permissions from the ftclient python file.
 clean:
-	rm -f ftserver
+	#rm -f ftserver
 	chmod -x ftclient.py
 cleanall: 
-	rm -f ftserver
+	#rm -f ftserver
 	chmod -x ftclient.py
