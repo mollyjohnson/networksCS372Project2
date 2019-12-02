@@ -438,7 +438,9 @@ void GetDirectoryContents(vector<string> &directoryContents){
 pre-conditions: valid vector, string for filename, a socket descriptor, previously initialized char delimiter
 post-conditions: vector is passed in by ref, will push file contents into the vector and vect will be updated
 after this function w those contents.
-description:
+description: opens a file w/ an input file stream (ifstream), if couldn't open it will print error and exit.
+otherwise will use getline to push each line (a string) back onto the vector of strings. vect was passed in
+by ref so will be updated w these lines at end of function. closes input file.
 */
 void GetFileContents(vector<string> &fileContents, string filename, int socketFDData, char delimiter){
 	//getting file contents line by line adapted from:
@@ -466,7 +468,7 @@ void GetFileContents(vector<string> &fileContents, string filename, int socketFD
 }
 
 /*
-pre-conditions:
+pre-conditions: has received command line args from the command line at time of program execution
 post-conditions:
 description:
 */
