@@ -387,7 +387,11 @@ int InitiateContact(struct addrinfo *servinfoData){
 /*
 pre-conditions: valid vector of strings
 post-conditions: vector passed by reference, vect values will be updated by this function
-description: 
+description: function receives vector. creates char array and memsets to empty. finds
+current working directory w/ getcwd() call. if can't get cwd, prints error msg and exits.
+otherwise, uses DIR FD and dirent struct to open the current working directory and loop
+through all contents of the directory, pushing each one onto the vector. if dir won't open,
+prints error msg and exits. otherwise vector will now contain all of the directory contents.
 */
 void GetDirectoryContents(vector<string> &directoryContents){
 	//create fixed size array for current working directory and memset
@@ -426,13 +430,14 @@ void GetDirectoryContents(vector<string> &directoryContents){
 	}
 	//else if the directory couldn't be open, print error message and exit
 	else{
-		fprintf(stderr, "Error, could not open directry\n"); fflush(stdout); exit(1);
+		fprintf(stderr, "Error, could not open directory\n"); fflush(stdout); exit(1);
 	}
 }
 
 /*
-pre-conditions:
-post-conditions:
+pre-conditions: valid vector, string for filename, a socket descriptor, previously initialized char delimiter
+post-conditions: vector is passed in by ref, will push file contents into the vector and vect will be updated
+after this function w those contents.
 description:
 */
 void GetFileContents(vector<string> &fileContents, string filename, int socketFDData, char delimiter){
