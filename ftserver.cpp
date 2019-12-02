@@ -469,8 +469,11 @@ void GetFileContents(vector<string> &fileContents, string filename, int socketFD
 
 /*
 pre-conditions: has received command line args from the command line at time of program execution
-post-conditions:
-description:
+post-conditions: all functions will have been called, sockets closed and cleaned up, any control
+and/or data information will have been sent/received via sockets with ftclient.
+description: main function. Calls other functions to check args, create variables and sockets, 
+handle control connection with ftclient as a server, handle data connection with ftclient as
+a client. loop will keep ftserver waiting to accept new connections until SIGINT (ctrl-c) is rec'd
 */
 int main(int argc, char *argv[]){
 	//check num args and arg validity
@@ -581,9 +584,6 @@ int main(int argc, char *argv[]){
 				fileFound = true;
 			}
 
-			//erasing a vector so it's empty again excerpted from:
-			//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
-			//http://www.cplusplus.com/reference/vector/vector/erase/
 			//erasing a vector so it's empty again excerpted from:
 			//https://www.geeksforgeeks.org/vector-erase-and-clear-in-cpp/ and
 			//http://www.cplusplus.com/reference/vector/vector/erase/
