@@ -47,5 +47,6 @@ and ftclient to receive all of the file contents can be VERY long but it will se
 of-file character ftclient's recv() function knows to continue reading data until the EOF char has been found. Depending on flip
 server traffic it sometimes took 30-40 minutes and occasionally over an hour for all of the file contents data requested
 to be sent and received when the file was ~10MB. Please give plenty of time for this to occur and don't terminate the process
-too early thinking there's been an error. It was tested with the files I included and though the process could be slow, it did
-work for all of these file sizes.
+too early thinking there's been an error. My programs were tested with the files I included and though the process could be slow,
+it did work for all of these file sizes and eventually print all messages described in the example execution provided in the assignment
+instructions/requirements and in the rubric.

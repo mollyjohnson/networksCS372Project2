@@ -169,7 +169,7 @@ def InitiateContact(portNum, hostName):
 #post-conditions: will have sent the message
 #description: accepts socket descriptor and a message, uses send()
 #to send the message to the socket via socket descriptor
-def SendMessage(sockFD, message):
+def MakeRequest(sockFD, message):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
 	#send the specified message using send()
@@ -179,7 +179,7 @@ def SendMessage(sockFD, message):
 #post-conditions: will receive a message and return it
 #description: accepts socket descriptor and uses recv() to receive
 #the message using socket. returns message
-def ReceiveMessage(sockFD):
+def ReceiveDataControl(sockFD):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
 	#receive the message from the socket using recv()
@@ -211,7 +211,7 @@ def RecdCommandCheck(controlMessage, dataPort):
 #post-conditions: will create socket, bind, and listen for connections, then return new socket descriptor
 #description: accepts host address and port, creates socket, binds, then listens for new connections.
 #returns socket descriptor.
-def SocketStartup(dataHostAddress, dataPort):
+def ServerSocketStartup(dataHostAddress, dataPort):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
 	#create TCP server socket
@@ -226,19 +226,31 @@ def SocketStartup(dataHostAddress, dataPort):
 	#return the data connection server socket file descriptor
 	return dataSocket
 
+#pre-conditions: valid socket descriptor
+#post-conditions: will accept a connection request from client
+#description: accepts socket descriptor arg. calls accept() to 
+#accept the request for connection from client. returns connectionSocket
+#and addr info
+def HandleRequest(socketFDData):
+	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
+	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
+	connectionSocket, addr = socketFDData.accept()
+
+	return connectionSocket, addr
+
 #pre-conditions: valid socket descriptor, prev initialized special delimiter
 #post-conditions: will print the directory contents received and return the
 #new connection socket and addr info.
 #description: accepts socket descriptor and special delimiter that marks the
-#end of the received transmission. calls accept() to accept the connection.
+#end of the received transmission. calls handlerequest() to accept the connection.
 #loops around getting message using recv() until the special EOF delimiter
 #is in the message. if it's in the message, remove it and the EOF has been reached,
 #then print the msg.if it's not in the message, print the msg and continue to loop.
 #after entire msg received, return new socket descriptor and addr info.
-def ReceiveMessageDirectory(socketFDData, delimiter):
+def ReceiveDataDirectory(socketFDData, delimiter):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#accept connection
-	connectionSocket, addr = socketFDData.accept()
+	connectionSocket, addr = HandleRequest(socketFDData)
 
 	#create empty string
 	message = ""
@@ -264,17 +276,17 @@ def ReceiveMessageDirectory(socketFDData, delimiter):
 
 #pre-conditions: valid socket descriptor, valid special delimiter char, previously validated filename
 #post-conditions: will have written received contents to a file
-#description: accepts socket descriptor, special EOF delimiter, and a validated filename. uses accept()
+#description: accepts socket descriptor, special EOF delimiter, and a validated filename. uses handlerequest()
 #to accept the connection. opens the file to be written to. loops around receiving data from the data
 #connection using recv() for as long as the special EOF delimiter char isn't in the msg. if it's not in the
 #message, keep looping and getting more data. if delim is in the message, will remove it and write that
 #line to file. otherwise, can just write the message to the file without editing anything in the message.
 #closes the file, returns new socket descriptor and addr info.
-def ReceiveMessageFile(socketFDData, delimiter, filename):
+def ReceiveDataFile(socketFDData, delimiter, filename):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#accept connection
-	connectionSocket, addr = socketFDData.accept()
-
+	connectionSocket, addr = HandleRequest(socketFDData)
+ 
 	#create empty string
 	message = ""
 
@@ -396,7 +408,7 @@ def GetDupFileChoice(filename):
 		#if the user didn't enter either yes or no, prompt again and let the loop continue for new input
 		else:
 			print("\nYou didn't enter \"yes\" or \"no\", please try again.")
-			print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename. ", end = '')
+			print("Type \"yes\" (minus quotes) to overwrite this file, or \"no\" (minus quotes) to enter a new filename: ", end = '')
 	
 	#return the new filename
 	return newFilename
@@ -434,16 +446,16 @@ def main():
 	#create listening socket for data connection to be ready for ftserver connections.
 	#due to slower python interpretation time compared to execution of c++ program, another student
 	#on OSU CS 372 slack (Andrew Freitas) recommended starting the listening early in ftclient
-	socketFDData = SocketStartup(CLIENT_HOST_ADDRESS, int(dataPort))
+	socketFDData = ServerSocketStartup(CLIENT_HOST_ADDRESS, int(dataPort))
 
 	#initiate contact with ftserver for the control connection
 	socketFDControl = InitiateContact(int(controlPort), serverHost)
 
 	#send control connection message to ftserver
-	SendMessage(socketFDControl, controlMessage)
+	MakeRequest(socketFDControl, controlMessage)
 
 	#receive control connection response from ftserver
-	controlMessage = ReceiveMessage(socketFDControl)
+	controlMessage = ReceiveDataControl(socketFDControl)
 
 	#check if ftserver found the command send in the controlMessage to be valid or not
 	isValidCommand = RecdCommandCheck(controlMessage, dataPort)
@@ -461,7 +473,7 @@ def main():
 			print("Receiving directory structure from " + SERVER_HOST_ADDRESS + ":" + str(dataPort))
 			
 			#accept connection and receive directory contents data from ftserver and print
-			connectionSocket, addr = ReceiveMessageDirectory(socketFDData, delimiter)
+			connectionSocket, addr = ReceiveDataDirectory(socketFDData, delimiter)
 
 			#close data connection socket
 			connectionSocket.close()
@@ -481,10 +493,11 @@ def main():
 			else:
 				newFilename = filename
 				
-			print("Receiving \"" + newFilename + "\" from " + SERVER_HOST_ADDRESS + ":" + str(dataPort))
+			print("Receiving \"" + filename + "\" from " + SERVER_HOST_ADDRESS + ":" + str(dataPort))
+			print("Writing to \"" + newFilename + "\" from " + SERVER_HOST_ADDRESS + ":" + str(dataPort))
 
 			#receive message over the data connection and write to the new file
-			connectionSocket, addr = ReceiveMessageFile(socketFDData, delimiter, newFilename)
+			connectionSocket, addr = ReceiveDataFile(socketFDData, delimiter, newFilename)
 			print("File transfer complete.")
 			#close data connection socket
 			connectionSocket.close()

@@ -178,7 +178,7 @@ the connection.
 using sockaddr_storage struct adapted from:  
 http://beej.us/guide/bgnet/html/#a-simple-stream-server.
 */
-int AcceptConnection(int sockFD, struct sockaddr_storage their_addr){
+int HandleRequest(int sockFD, struct sockaddr_storage their_addr){
 	//get size of sockaddr_storage struct
 	socklen_t addr_size = sizeof their_addr;
 
@@ -236,7 +236,7 @@ string so copies string into a char array (but memsets to blank first). will
 send up to the length of that char array with send(), and check for send errors.
 if send() errors, will print error message and exit.
 */
-void SendMessage(int sockFD, string message){
+void MakeRequest(int sockFD, string message){
 	//using send() with sockets adapted from:
 	//http://beej.us/guide/bgnet/html/#a-simple-stream-server and
 	//my own work from OSU CS 344 Project 4, Winter 2019
@@ -282,7 +282,7 @@ memsets this array to blank. calls recv() function and checks for recv() error.
 if errored, will print message and exit. otherwise will copy char arry into a string,
 and return this string.
 */
-string ReceiveMessage(int newFD){
+string ReceiveData(int newFD){
 	//using send() with sockets adapted from:
 	//http://beej.us/guide/bgnet/html/#a-simple-stream-server and
 	//my own work from OSU CS 344 Project 4, Winter 2019
@@ -532,11 +532,11 @@ int main(int argc, char *argv[]){
 	//loop until SIGINT (ctrl-c) is received
 	while(1){
 		//accept control connection
-		newSocketFDControl = AcceptConnection(socketFDControl, their_addr);
+		newSocketFDControl = HandleRequest(socketFDControl, their_addr);
 		cout << "Connection from " << CLIENT_HOST_ADDRESS << ".\n";
 
 		//receive message from ftclient over control connection
-		controlMsgRecd = ReceiveMessage(newSocketFDControl);
+		controlMsgRecd = ReceiveData(newSocketFDControl);
 
 		//check if there's a filename sent by the client or not and parse out the message
 		//using the delimiter so can assign those variables
@@ -552,7 +552,8 @@ int main(int argc, char *argv[]){
 		//over control connection
 		if(goodCommand == false){
 			string errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n";
-			SendMessage(newSocketFDControl, errorMessage);
+			cout << errorMessage;
+			MakeRequest(newSocketFDControl, errorMessage);
 		}
 
 		//else if there was a file and the command was -g
@@ -576,7 +577,7 @@ int main(int argc, char *argv[]){
 				cout << "File not found. Sending error message to " << CLIENT_HOST_ADDRESS 
 						<< ":" << dataPort << "\n";
 
-				SendMessage(newSocketFDControl, errorMessage);
+				MakeRequest(newSocketFDControl, errorMessage);
 				fileFound = false;
 			}
 			//otherwise if filename count increments >0 (file was foud), set filefound to true
@@ -608,17 +609,17 @@ int main(int argc, char *argv[]){
 				
 				//get the contents of the requested file
 				GetFileContents(fileContents, filename, socketFDData, delimiter);
-				cout << "Sending \"" << filename << "\" to" << CLIENT_HOST_ADDRESS <<
+				cout << "Sending \"" << filename << "\" to " << CLIENT_HOST_ADDRESS <<
 						":" << dataPort << "\n";
 
 				for(int k = 0; k < fileContents.size(); k++){
 					//if not the last item in the vector, add newline char and send to ftclient
 					if(k != fileContents.size() - 1){
-						SendMessage(socketFDData, (fileContents[k] + "\n"));
+						MakeRequest(socketFDData, (fileContents[k] + "\n"));
 					}
 					//else if the last of the messages being sent, append special delimiter char instead of a newline
 					else{
-						SendMessage(socketFDData, (fileContents[k] + delimiter));
+						MakeRequest(socketFDData, (fileContents[k] + delimiter));
 					}
 				}
 				//erase file contents vect in case loops around again w a new client connection later
@@ -656,11 +657,11 @@ int main(int argc, char *argv[]){
 			for(int k = 0; k < directoryContents.size(); k++){
 				//if not the last item in the vector, add newline char and send to ftclient
 				if(k != directoryContents.size() - 1){
-					SendMessage(socketFDData, (directoryContents[k] + "\n"));
+					MakeRequest(socketFDData, (directoryContents[k] + "\n"));
 				}
 				//if the last one of the messages being sent, append special delimiter char instead of a newline
 				else{
-					SendMessage(socketFDData, (directoryContents[k] + delimiter));
+					MakeRequest(socketFDData, (directoryContents[k] + delimiter));
 				}
 			}
 			//erasing a vector so it's empty again excerpted from:
@@ -669,7 +670,7 @@ int main(int argc, char *argv[]){
 			//close the data socket
 			close(socketFDData);
 		}
-		//close new socket for control	
+		//close new socket for control connection
 		close(newSocketFDControl);
 	}
 	//freeaddrinfo(servinfoData);
