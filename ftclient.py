@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
-#although this file doesn't have the .py extension, it is written in python and the above shebang was included
-#to make sure it will be run using python 3 on the flip server. Adapted from my own work on CS 372 intro to 
-#networks Project 1.
+#shebang included to make sure this file will be interpreted using python 3 on the flip server.
+#Adapted from my own work on CS 372 intro to networks Project 1.
 
 #Programmer Name: Molly Johnson (johnsmol)
 #Program name: ftclient

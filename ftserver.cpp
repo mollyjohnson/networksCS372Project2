@@ -77,9 +77,18 @@ using std::basic_string;
 #define MAX_MSG_SIZE 1028
 
 /*
-pre-conditions:
-post-conditions:
-description:
+pre-conditions: isFile bool prev initialized, command is a valid string, filename is a valid string
+post-conditions: will return true if the command was valid (-g before a filename, or -l with
+no filename), false if the command was invalid (any other command besides -g before a filename,
+or -l with no filename)
+description: accepts bool arg previously found indicating whether ftclient included a filename
+or not, string of the ftclient command, and a string of the ftclient filename it's requesting.
+if isFile bool is true (ftclient gave a filename on the control connection message), will
+check if the command is -g. if it is, will return true. otherwise will clear the filename string
+since filename would then be invalid since command was invalid, and return false. if the isfile
+bool was false (no file being requested by ftclient), will check if the command was -l. if so,
+will return true. otherwise will return false. note: -l <filename> and -g with no filename are
+NOT considered valid commands.
 */
 bool CommandCheck(bool isFile, string command, string &filename){
 	//if there was a file, check that command was -g
@@ -106,11 +115,13 @@ bool CommandCheck(bool isFile, string command, string &filename){
 }
 
 /*
-pre-conditions:
-post-conditions:
-description:
+pre-conditions: inputstring is a valid string
+post-conditions: will return false if any of the chars of the string are not in the range
+of ascii values for integers 0-9 (ascii 48-57). if all are within this range, will return true.
+description: accepts a string, checks each char in the string to make sure it's a non-negative
+integer. returns true if all chars were non-negative ints, otherwise returns false.
 */  
-int IntInputValidation(string inputString){
+bool IntInputValidation(string inputString){
 	//this function was adapted from my own work for OSU CS 344 Winter 2019 assignment 3,
 	//last updated 3-3-19.
 	
@@ -134,9 +145,11 @@ int IntInputValidation(string inputString){
 }
 
 /*
-pre-conditions:
-post-conditions:
-description:
+pre-conditions: has received some command line args from the user when they executed the program
+post-conditions: will exit w code 1 if arg count or the port num args were invalid
+description: accepts the argCount and args array as arguments. for ftserver, argcount must be 2,
+and arg 1 must be a valid port number. if number of args is wrong, or arg1 is not an integer or
+is outside of the valid port number range, will print error message and exit.
 */
 void ArgCheck(int argCount, char *args[]){
 	//arg count must be 2 to be valid. if not == 2, print error message and exit
@@ -155,12 +168,18 @@ void ArgCheck(int argCount, char *args[]){
 }
 
 /*
-pre-conditions:
-post-conditions:
-description:
+pre-conditions: valid socket file descriptor sockFD, valid sockaddr_storage struct.
+post-conditions: will return the new socket descriptor upon 
+successful accept(), exit if accept() unsuccessful.
+description: will accept a socket file descriptor and sockaddr_storage struct. will get
+size of the sockaddr_storage and call accept to accept a connection. if error on accept,
+will print error message and exit. otherwise will return the new socket descriptor for
+the connection.
+using sockaddr_storage struct adapted from:  
+http://beej.us/guide/bgnet/html/#a-simple-stream-server.
 */
 int AcceptConnection(int sockFD, struct sockaddr_storage their_addr){
-	//get length of address
+	//get size of sockaddr_storage struct
 	socklen_t addr_size = sizeof their_addr;
 
 	//accept connection. accept() use adapted from:
@@ -180,9 +199,12 @@ int AcceptConnection(int sockFD, struct sockaddr_storage their_addr){
 }
 
 /*
-pre-conditions:
-post-conditions:
-description:
+pre-conditions: accepts a port number (as char const not int) and addrinfo struct
+post-conditions: returns socket descriptor
+description: accepts port num char const and addrinfo struct. uses socket() call
+to create socket descriptor. if error creating socket descriptor, prints message
+and exits. otherwise will then bind the socket to host address and server port, 
+then listen for connections and return the socket descriptor.
 */
 int ServerSocketStartup(char const *portNum, struct addrinfo *servinfo){
 	//create socket w server info. adapted from:
@@ -207,9 +229,12 @@ int ServerSocketStartup(char const *portNum, struct addrinfo *servinfo){
 }
 
 /*
-pre-conditions:
-post-conditions:
-description:
+pre-conditions: valid socket file descriptor, valid string message
+post-conditions: will have sent the message using send() unless an error occurred
+description: accepts socket descriptor and a string message. send() won't accept a
+string so copies string into a char array (but memsets to blank first). will
+send up to the length of that char array with send(), and check for send errors.
+if send() errors, will print error message and exit.
 */
 void SendMessage(int sockFD, string message){
 	//using send() with sockets adapted from:
@@ -250,9 +275,12 @@ void SendMessage(int sockFD, string message){
 }
 
 /*
-pre-conditions:
-post-conditions:
-description:
+pre-conditions: one valid socket descriptor
+post-conditions: will return message received from recv() unless recv() errored
+description: accepts a socket descriptor arg. creates receive buffer char array,
+memsets this array to blank. calls recv() function and checks for recv() error.
+if errored, will print message and exit. otherwise will copy char arry into a string,
+and return this string.
 */
 string ReceiveMessage(int newFD){
 	//using send() with sockets adapted from:
@@ -277,9 +305,17 @@ string ReceiveMessage(int newFD){
 }
 
 /*
-pre-conditions:
-post-conditions:
-description:
+pre-conditions: needs a valid string, valid char (that's not printable since i can't know what chars will
+be in the text files the graders will be using), a valid string command, a valid string filename, and a valid string
+port variable. 
+post-conditions: command, filename, and dataPort variables passed by reference, their values will be updated
+by end of this function unless is an error. returns true if filename present, false if no filename.
+description: accepts the large string msg received from ftclient (separated by delimiters). creates a vector
+and stringstream. uses getline and the special delimiter to tokenize the substrings from the larger control
+connection message string recv'd from ftclient. pushes each of these intermediate substrings onto the vect.
+if are 2 vector strings, first is token, second is dataport, filename not present so clears filename variable
+and returns false. if are 3 vector strings, first is command, second is filename, third is dataport and returns
+true since a filename was present.
 */
 bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command, string &filename, string &dataPort){
 	//using stringstream and getline to get a vector of parsed strings separated by a delimiter character
@@ -319,9 +355,12 @@ bool ParseControlMessage(string controlMsgRecd, char delimiter, string &command,
 }
 
 /*
-pre-conditions:
-post-conditions:
-description:
+pre-conditions: valid addrinfo struct
+post-conditions: returns a socket descriptor
+description: function accepts an addrinfo struct. creates socket w socket() call.
+checks for error, if error will print msg and exit. connects using connect(), checks
+status of connect call, if error will print msg and exit. if both successful, returns
+socket descriptor.
 */
 int InitiateContact(struct addrinfo *servinfoData){
 	//using send() with sockets adapted from:
@@ -346,9 +385,9 @@ int InitiateContact(struct addrinfo *servinfoData){
 }
 
 /*
-pre-conditions:
-post-conditions:
-description:
+pre-conditions: valid vector of strings
+post-conditions: vector passed by reference, vect values will be updated by this function
+description: 
 */
 void GetDirectoryContents(vector<string> &directoryContents){
 	//create fixed size array for current working directory and memset
