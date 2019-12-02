@@ -226,9 +226,15 @@ def SocketStartup(dataHostAddress, dataPort):
 	#return the data connection server socket file descriptor
 	return dataSocket
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: valid socket descriptor, prev initialized special delimiter
+#post-conditions: will print the directory contents received and return the
+#new connection socket and addr info.
+#description: accepts socket descriptor and special delimiter that marks the
+#end of the received transmission. calls accept() to accept the connection.
+#loops around getting message using recv() until the special EOF delimiter
+#is in the message. if it's in the message, remove it and the EOF has been reached,
+#then print the msg.if it's not in the message, print the msg and continue to loop.
+#after entire msg received, return new socket descriptor and addr info.
 def ReceiveMessageDirectory(socketFDData, delimiter):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#accept connection
@@ -256,9 +262,12 @@ def ReceiveMessageDirectory(socketFDData, delimiter):
 	#return the connection socket FD and addr info
 	return connectionSocket, addr
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: valid socket descriptor, valid special delimiter char, previously validated filename
+#post-conditions: will have written received contents to a file
+#description: accepts socket descriptor, special EOF delimiter, and a validated filename. uses accept()
+#to accept the connection. opens the file to be written to. loops around receiving data from the data
+#connection using recv() for as long as the special EOF delimiter char isn't in the msg. if it's not in the
+#message
 def ReceiveMessageFile(socketFDData, delimiter, filename):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#accept connection
