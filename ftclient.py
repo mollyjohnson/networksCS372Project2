@@ -267,7 +267,9 @@ def ReceiveMessageDirectory(socketFDData, delimiter):
 #description: accepts socket descriptor, special EOF delimiter, and a validated filename. uses accept()
 #to accept the connection. opens the file to be written to. loops around receiving data from the data
 #connection using recv() for as long as the special EOF delimiter char isn't in the msg. if it's not in the
-#message
+#message, keep looping and getting more data. if delim is in the message, will remove it and write that
+#line to file. otherwise, can just write the message to the file without editing anything in the message.
+#closes the file, returns new socket descriptor and addr info.
 def ReceiveMessageFile(socketFDData, delimiter, filename):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#accept connection
@@ -303,9 +305,15 @@ def ReceiveMessageFile(socketFDData, delimiter, filename):
 	#return the connection socket FD and addr info
 	return connectionSocket, addr
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: valid message received from ftserver over the control connection,
+#valid data port num.
+#post-conditions: will have validated the filename to see if ftserver was able to
+#find a file with that name or not, returning true if ftserver didn't send error,
+#false if ftserver sent error message.
+#description: accepts message from ftserver over control connection and data port num.
+#checks if the msg received matches the known error message. if does, prints error message
+#and returns false since ftserver couldn't find that file name in its directory. otherwise,
+#ftserver did find a file with that name and returns true
 def FileNameFound(controlMessage, dataPort):
 	#the error message ftserver will send if the file wasn't found
 	errorMessage = "File not found.\n"
@@ -319,9 +327,13 @@ def FileNameFound(controlMessage, dataPort):
 	else:
 		return True
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: receives a filename
+#post-conditions: will return bool indicating whether that file is present in the
+#same directory as ftclient or not.
+#description: accepts a filename. gets a list of current directory contents. loops
+#through these contents, checking if any of them match the filename passed in (i.e.
+#if that name is a duplicate and there's already a file in the current ftclient directory
+#with that filename). if there is a duplicate, returns true. else returns false.
 def DupFileCheck(filename):
 	#getting everything from a directory in python adapted from:
 	#https://stackoverflow.com/questions/3207219/how-do-i-list-all-files-of-a-directory
@@ -337,9 +349,17 @@ def DupFileCheck(filename):
 
 	return False;
 
-#pre-conditions:
-#post-conditions:
-#description:	
+#pre-conditions: filename that has been already verified as a duplicate filename
+#post-conditions: will have a new filename ready to be written to, whether it's the same
+#duplicate name and user has chosen to overwrite, or whether it's a new name chosen by the
+#user that's not a duplicate.
+#description: receives filename of a duplicate file. prompts user for choice whether to overwrite
+#or not. validates this userchoice. if yes, will overwrite the file with that name. if no, will
+#ask for a new file name. if new file name given is also a duplicate, will loop around and prompt
+#again for if they want to overwrite that filename or give a new one. if user doesn't enter either
+#yes or no at the initial prompt, will print error message and loop back around. continues until
+#user has either decided to overwrite a duplicate filename, or give a new filename. then either way,
+#will return that filename to be used to write to.
 def GetDupFileChoice(filename):
 	#print message to user about duplicate file and prompt for choice to overwrite or rename
 	print("\nThe filename (" + str(filename) + ") you entered is a duplicate. Do you want to overwrite it?")
@@ -381,9 +401,13 @@ def GetDupFileChoice(filename):
 	#return the new filename
 	return newFilename
 						
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: user must have entered some command line args when they ran the python script
+#post-conditions: all functions will have been called, sockets closed and cleaned up, any control
+#and/or data information will have been sent/received via sockets with ftserver.
+#description: main function. Calls other functions to check args, create variables and sockets, 
+#handle control connection with ftserver as a client, handle data connection with ftserver as
+#a server. once any control or data connection work is done, will cleanup/close the socket
+#and terminate.
 def main():
 	#check num of args and validity of the command line args
 	numArgs = ArgNumCheck()
