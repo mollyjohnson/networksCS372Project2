@@ -149,32 +149,36 @@ def ArgNumCheck():
 	#return the number of args
 	return len(sys.argv)
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: valid port num, valid host name
+#post-conditions: will return a socket descriptor
+#description: takes port num and hostname and creates
+#tcp socket and connects. then returns the socket descriptor
 def InitiateContact(portNum, hostName):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 8)
 	#create TCP socket
 	sockFD = socket(AF_INET, SOCK_STREAM)
 
 	#connect to the specified hostname and portnum
+	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 8)
 	sockFD.connect((hostName, portNum))
 
 	#return socket file descriptor
 	return sockFD
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: valid socket descriptor, valid message
+#post-conditions: will have sent the message
+#description: accepts socket descriptor and a message, uses send()
+#to send the message to the socket via socket descriptor
 def SendMessage(sockFD, message):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
 	#send the specified message using send()
 	sockFD.send((message).encode())
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: valid socket descriptor
+#post-conditions: will receive a message and return it
+#description: accepts socket descriptor and uses recv() to receive
+#the message using socket. returns message
 def ReceiveMessage(sockFD):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
@@ -184,9 +188,13 @@ def ReceiveMessage(sockFD):
 	#return the message received
 	return message
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: control message received from ftserver over control connection,
+#valid data port num
+#post-conditions: will have checked if ftserver sent error message saying command
+#was bad, return true if command good, false if command invalid
+#description: accepts message from ftserver from control connection and a data port.
+#checks if it matches the known error message. if matches, will print message
+#describing invalid command and return false. otherwise command was valid, returns true
 def RecdCommandCheck(controlMessage, dataPort):
 	#the error message ftserver will send if the command sent by ftclient was invalid
 	errorMessage = "Error, that command was invalid. Please use \"-l\" or \"-g <FILENAME>\"\n" 
@@ -199,9 +207,10 @@ def RecdCommandCheck(controlMessage, dataPort):
 		return False
 	return True
 
-#pre-conditions:
-#post-conditions:
-#description:
+#pre-conditions: valid host address and port num for data connection
+#post-conditions: will create socket, bind, and listen for connections, then return new socket descriptor
+#description: accepts host address and port, creates socket, binds, then listens for new connections.
+#returns socket descriptor.
 def SocketStartup(dataHostAddress, dataPort):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#and p.205 from Computer Networking-A Top-Down Approach by Kurose and Ross, 7th ed
@@ -217,6 +226,9 @@ def SocketStartup(dataHostAddress, dataPort):
 	#return the data connection server socket file descriptor
 	return dataSocket
 
+#pre-conditions:
+#post-conditions:
+#description:
 def ReceiveMessageDirectory(socketFDData, delimiter):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#accept connection
@@ -244,6 +256,9 @@ def ReceiveMessageDirectory(socketFDData, delimiter):
 	#return the connection socket FD and addr info
 	return connectionSocket, addr
 
+#pre-conditions:
+#post-conditions:
+#description:
 def ReceiveMessageFile(socketFDData, delimiter, filename):
 	#adapted from OSU CS 372 lecture 15 slides (specifically, slide 9)
 	#accept connection
